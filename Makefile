@@ -1,6 +1,6 @@
 export LINUX_DIR := $(PWD)/kernel/linux-4.14.36
 export KERNEL_DIR := $(LINUX_DIR)/build/linux
-export XENOMAI_DIR := $(PWD)/xenomai-3.0.7
+export XENOMAI_DIR := $(PWD)/xenomai-3.0.8
 
 .PHONY: clean kernel drivers tools tools_install configure xenomai_kernel
 
@@ -31,6 +31,7 @@ drivers: kernel
 
 tools:
 	cd $(XENOMAI_DIR); ./configure --enable-smp --with-core=cobalt
+	./configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --with-core=cobalt --enable-smp CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
 	make -C $(XENOMAI_DIR) -j4
 
 

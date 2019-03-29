@@ -5,3 +5,4 @@
 *.symvers
 *.mod.c
 .tmp_versions
+.vscode/ipch/
