@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "../rpi_rt/linux/include",
+                "../rpi_rt/linux/arch/arm/include",
+                "../rpi_rt/xenomai-3.0.8/include",
+                "../rpi_rt/xenomai-3.0.8/target/usr/xenomai/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
