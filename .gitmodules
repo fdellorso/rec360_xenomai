@@ -1,0 +1,6 @@
+[submodule "tools"]
+	path = tools
+	url = https://github.com/raspberrypi/tools
+[submodule "kernel/linux-4.14.85"]
+	path = kernel/linux-4.14.85
+	url = https://github.com/raspberrypi/linux

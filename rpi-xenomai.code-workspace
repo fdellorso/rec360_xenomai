@@ -4,5 +4,12 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"fs.h": "c",
+			"driver.h": "c",
+			"fd.h": "c",
+			"syscall.h": "c"
+		}
+	}
 }
