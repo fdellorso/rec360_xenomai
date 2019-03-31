@@ -3,7 +3,7 @@
 	url = https://github.com/raspberrypi/tools
 	ignore = dirty
 [submodule "linux-4.14.85"]
-	path = linux-4.14.85
+	path = kernel
 	url = https://github.com/raspberrypi/linux
 	ignore = dirty
 [submodule "xenomai"]
