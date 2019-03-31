@@ -1,6 +1,12 @@
 [submodule "tools"]
 	path = tools
 	url = https://github.com/raspberrypi/tools
+	ignore = dirty
 [submodule "kernel/linux-4.14.85"]
 	path = kernel/linux-4.14.85
 	url = https://github.com/raspberrypi/linux
+	ignore = dirty
+[submodule "xenomai"]
+	path = xenomai
+	url = https://gitlab.denx.de/Xenomai/xenomai
+	ignore = dirty

@@ -4,10 +4,10 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "../rpi_rt/linux/include",
-                "../rpi_rt/linux/arch/arm/include",
-                "../rpi_rt/xenomai-3.0.8/include",
-                "../rpi_rt/xenomai-3.0.8/target/usr/xenomai/include"
+                "${workspaceFolder}/kernel/linux-4.14.85/include",
+                "${workspaceFolder}/kernel/linux-4.14.85/arch/arm/include",
+                "${workspaceFolder}/xenomai/include",
+                "${workspaceFolder}/xenomai-tools/usr/xenomai/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

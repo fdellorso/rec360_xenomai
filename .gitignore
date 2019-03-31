@@ -6,3 +6,6 @@
 *.mod.c
 .tmp_versions
 .vscode/ipch/
+image/
+rt-kernel/
+xenomai-tools/
