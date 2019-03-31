@@ -1,6 +1,6 @@
-export LINUX_DIR			:= $(PWD)/kernel/linux-4.14.85
-export KERNEL_DIR			:= $(PWD)/rt-kernel
-export XENOMAI_DIR			:= $(PWD)/xenomai-3.0.8
+export LINUX_DIR			:= $(PWD)/kernel
+export KERNEL_DIR			:= $(PWD)/kernel-output
+export XENOMAI_DIR			:= $(PWD)/xenomai
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
 
 export CORES				:= -j2
@@ -10,11 +10,11 @@ export KERNEL				:= kernel
 export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
 
 
-# .PHONY: clean kernel drivers tools tools_install configure xenomai_kernel
+.PHONY: clean_kernel clean_tools clean_rtdm kernel rtdm tools tools_install menuconfig patch_xenomai
 
-kernel: output patch_xenomai config
-	make -C $(LINUX_DIR) ARCH=$(ARCH) O=build/linux $(CORES) zImage modules dtbs
-	make -C $(LINUX_DIR) ARCH=$(ARCH) O=build/linux $(CORES) modules_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+kernel: config
+	make -C $(LINUX_DIR) ARCH=$(ARCH) O=$(KERNEL_DIR) $(CORES) zImage modules dtbs
+	make -C $(LINUX_DIR) ARCH=$(ARCH) O=$(KERNEL_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 
 
 output:
@@ -22,23 +22,23 @@ output:
 
 
 patch_irq:
-	cp -v kernel/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+	cp -v kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
 
 patch_xenomai: patch_irq
-	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./kernel/ipipe-core-4.14.85-arm-6.patch --verbose
+	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
 
 
 config: output patch_xenomai
 	make -C $(LINUX_DIR) ARCH=$(ARCH) O=$(KERNEL_DIR) bcmrpi_defconfig
-	cp kernel/kernel-config $(KERNEL_DIR)/.config
+	cp kernel-patch/kernel-config $(KERNEL_DIR)/.config
 
 
 menuconfig: output patch_xenomai
 	make -C $(LINUX_DIR) ARCH=$(ARCH) O=$(KERNEL_DIR) menuconfig
 
 
-drivers: kernel
+rtdm: kernel tools
 	make -C drivers/RTDM_gpio_driver
 	make -C drivers/RTDM_gpio_sampling_driver
 	make -C drivers/RTDM_gpio_wave_driver
@@ -51,7 +51,7 @@ tools:
 	make -C $(XENOMAI_DIR) $(CORES)
 
 
-tools_install:
+tools_install: tools
 	mkdir -p $(TOOLS_DIR)
 	make -C $(XENOMAI_DIR) $(CORES) install DESTDIR=$(TOOLS_DIR)
 
@@ -65,7 +65,7 @@ clean_tools:
 	rm -rf $(TOOLS_DIR)
 
 
-clean_drivers:
+clean_rtdm:
 	make -C drivers/RTDM_gpio_driver clean
 	make -C drivers/RTDM_gpio_wave_driver clean
 	make -C drivers/RTDM_timer_driver clean

@@ -9,7 +9,11 @@
 			"fs.h": "c",
 			"driver.h": "c",
 			"fd.h": "c",
-			"syscall.h": "c"
+			"syscall.h": "c",
+			"tree.h": "c",
+			"mm_types.h": "c",
+			"mm_types_task.h": "c",
+			"features.h": "c"
 		}
 	}
 }
