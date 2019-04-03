@@ -4,13 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/kernel/linux-4.14.85/include",
-                "${workspaceFolder}/kernel/linux-4.14.85/arch/arm/include",
-                "${workspaceFolder}/kernel/linux-4.14.85/arch/arm/xenomai/include",
+                "${workspaceFolder}/kernel/include",
+                "${workspaceFolder}/kernel/arch/arm/include",
+                "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/xenomai/include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "${workspaceFolder}/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17"
         }

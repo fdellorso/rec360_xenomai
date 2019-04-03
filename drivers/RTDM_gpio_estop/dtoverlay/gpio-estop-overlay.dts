@@ -1,0 +1,22 @@
+// Definitions for gpio-estop module
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2708";
+
+	fragment@0 {
+		// Configure the gpio pin controller
+		target = <&gpio>;
+		__overlay__ {
+			pinctrl-names = "default";
+            pinctrl-0 = <&estop_pins>;
+
+			estop_pins: estop_pins {
+				brcm,pins = <20 21>; // gpio number
+				brcm,function = <0 0>; // 0 = input, 1 = output
+				brcm,pull = <2 2>; // 0 = none, 1 = pull down, 2 = pull up
+			};
+		};
+	};
+};

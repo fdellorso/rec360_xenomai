@@ -1,5 +1,11 @@
-Xenomai 3.0.7 on Raspberry Pi 3
-===============================
+Xenomai 3.0.8 on Raspberry Pi 1B+ / Zero (W)
+============================================
+
+Raspberry Linux Kernel  4.14.85
+Xenomai                 3.0.8
+Xenomai I-Pipe Patch    4.14.85 arm 6
+Compiler Linaro x64     4.8.3
+
 
 This short guide explains how to put Xenomai 3 Cobalt on the Raspberry Pi 3.
 

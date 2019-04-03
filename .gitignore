@@ -6,6 +6,7 @@
 *.mod.c
 .tmp_versions
 .vscode/ipch/
+dietpi-backup/
 kernel-package/
 kernel-output/
 xenomai-tools/

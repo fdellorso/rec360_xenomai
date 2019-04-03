@@ -13,7 +13,8 @@
 			"tree.h": "c",
 			"mm_types.h": "c",
 			"mm_types_task.h": "c",
-			"features.h": "c"
+			"features.h": "c",
+			"module.h": "c"
 		}
 	}
 }
