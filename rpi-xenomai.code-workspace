@@ -14,7 +14,10 @@
 			"mm_types.h": "c",
 			"mm_types_task.h": "c",
 			"features.h": "c",
-			"module.h": "c"
+			"module.h": "c",
+			"interrupt.h": "c",
+			"gpio.h": "c",
+			"time.h": "c"
 		}
 	}
 }

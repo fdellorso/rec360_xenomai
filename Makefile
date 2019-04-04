@@ -3,7 +3,7 @@ export KERNEL_DIR			:= $(PWD)/kernel-output
 export XENOMAI_DIR			:= $(PWD)/xenomai
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
 
-export CORES				:= -j2
+export CORES				:= -j8
 
 export ARCH					:= arm
 export KERNEL				:= kernel
@@ -13,7 +13,7 @@ export BOOT_DIR				?= /media/fra/boot/
 export ROOT_DIR				?= /media/fra/rootfs/
 
 
-.PHONY: clean_kernel clean_tools clean_drivers kernel drivers tools tools_install config menuconfig patch_irq patch_xenomai copy_tosd config.txt cmdline.txt
+.PHONY: clean_kernel clean_tools clean_drivers kernel drivers drivers_dtoverlay tools tools_install config menuconfig patch_irq patch_xenomai copy_tosd config.txt cmdline.txt
 
 
 kernel:
@@ -64,6 +64,10 @@ drivers:
 	# make -C drivers/RTDM_gpio_sampling_driver
 	# make -C drivers/RTDM_gpio_wave_driver
 	# make -C drivers/RTDM_timer_driver
+
+
+drivers_dtoverlay:
+	make -C drivers/RTDM_gpio_estop dtoverlay
 
 
 tools:
