@@ -18,7 +18,7 @@ export ROOT_DIR				?= /media/fra/rootfs/
 .PHONY: config 			menuconfig		kernel		\
 		patch_irq		patch_xenomai 				\
 		copy_tosd		config.txt		cmdline.txt \
-		prepare_drivers	drivers			dtoverlay 	\
+		prepare_drivers	drivers			overlays 	\
 		tools 			tools_install				\
 		clean_kernel 	clean_tools					\
 		reset_kernel 	reset_tools
@@ -43,7 +43,7 @@ patch_xenomai: patch_irq
 config: patch_xenomai
 	mkdir -p $(KBUILD_DIR)
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
-	# cp kernel-patch/kernel-config $(KBUILD_DIR)/.config
+	patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch
 
 
 menuconfig:
@@ -72,14 +72,15 @@ cmdline.txt:
 prepare_drivers:
 	cp -r drivers/stufa $(LINUX_DIR)/drivers/
 	@printf "\nobj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
+	patch $(LINUX_DIR)/drivers/Kconfig drivers/Kconfig.patch
 
 
-drivers: prepare_drivers
-	cp rtdm-gpio-estop.c $(LINUX_DIR)/drivers/stufa/estop/
+drivers:
+	cp drivers/RTDM_gpio_estop/rtdm-gpio-estop.c $(LINUX_DIR)/drivers/stufa/estop/
 
 
-dtoverlay:
-	cp drivers/dtoverlay/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+overlays:
+	cp drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
 
 tools:
