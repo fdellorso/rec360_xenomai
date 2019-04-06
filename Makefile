@@ -1,6 +1,7 @@
 export LINUX_DIR			:= $(PWD)/kernel
 export KBUILD_DIR			:= $(PWD)/kernel-build
 export KERNEL_DIR			:= $(PWD)/kernel-output
+export KPACKAGE_DIR			:= $(PWD)/kernel-package
 export XENOMAI_DIR			:= $(PWD)/xenomai
 export XBUILD_DIR			:= $(PWD)/xenomai-build
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
@@ -11,16 +12,17 @@ export ARCH					:= arm
 export KERNEL				:= kernel
 export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
 
-export BOOT_DIR				?= /media/fra/boot/
-export ROOT_DIR				?= /media/fra/rootfs/
+export BOOT_DIR				?= /media/francesco/boot/
+export ROOT_DIR				?= /media/francesco/rootfs/
 
 
-.PHONY: config 			menuconfig		kernel		\
-		patch_irq		patch_xenomai 				\
-		copy_tosd		config.txt		cmdline.txt \
-		prepare_drivers	drivers			overlays 	\
-		tools 			tools_install				\
-		clean_kernel 	clean_tools					\
+.PHONY: kernel			kernel_package	\
+		config 			menuconfig		\
+		patch_irq		patch_xenomai 	\
+		prepare_drivers	drivers			\
+		overlays 						\
+		tools 			tools_install	\
+		clean_kernel 	clean_tools		\
 		reset_kernel 	reset_tools
 
 
@@ -30,10 +32,16 @@ kernel:
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
 	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
+	cp kernel-patch/Makefile $(KERNEL_DIR)/
+
+
+kernel_package:
+	mkdir -p $(KPACKAGE_DIR)
+	cd $(KERNEL_DIR); tar czf $(KPACKAGE_DIR)/xenomai-kernel.tgz *
 
 
 patch_irq:
-	cp -v kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
 
 patch_xenomai: patch_irq
@@ -50,28 +58,9 @@ menuconfig:
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) menuconfig
 
 
-copy_tosd:
-	sudo cp $(KERNEL_DIR)/*.dtb $(BOOT_DIR)
-	sudo cp -rd $(KERNEL_DIR)/boot/* $(BOOT_DIR)
-	sudo cp -dr $(KERNEL_DIR)/lib/* $(ROOT_DIR)lib/
-	sudo cp -d $(KERNEL_DIR)/overlays/* $(BOOT_DIR)overlays/
-	sudo cp -d $(KERNEL_DIR)/bcm* $(BOOT_DIR)
-
-
-config.txt:
-	@echo "kernel=kernel.img" >> $(BOOT_DIR)config.txt
-	# @echo "device_tree=bcm2708-rpi-0-w.dtb" >> $(BOOT_DIR)config.txt
-	@echo "device_tree=bcm2708-rpi-b-plus.dtb" >> $(BOOT_DIR)config.txt
-	@echo "dtoverlay=gpio-estop" >> $(BOOT_DIR)config.txt
-
-
-cmdline.txt:
-	@echo -n " dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0" >> $(BOOT_DIR)cmdline.txt
-
-
 prepare_drivers:
 	cp -r drivers/stufa $(LINUX_DIR)/drivers/
-	@printf "\nobj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
+	@echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
 	patch $(LINUX_DIR)/drivers/Kconfig drivers/Kconfig.patch
 
 
