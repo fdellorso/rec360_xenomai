@@ -1,6 +1,8 @@
 export LINUX_DIR			:= $(PWD)/kernel
+export KBUILD_DIR			:= $(PWD)/kernel-build
 export KERNEL_DIR			:= $(PWD)/kernel-output
 export XENOMAI_DIR			:= $(PWD)/xenomai
+export XBUILD_DIR			:= $(PWD)/xenomai-build
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
 
 export CORES				:= -j8
@@ -13,15 +15,21 @@ export BOOT_DIR				?= /media/fra/boot/
 export ROOT_DIR				?= /media/fra/rootfs/
 
 
-.PHONY: clean_kernel clean_tools clean_drivers kernel drivers drivers_dtoverlay tools tools_install config menuconfig patch_irq patch_xenomai copy_tosd config.txt cmdline.txt
+.PHONY: config 			menuconfig		kernel		\
+		patch_irq		patch_xenomai 				\
+		copy_tosd		config.txt		cmdline.txt \
+		prepare_drivers	drivers			dtoverlay 	\
+		tools 			tools_install				\
+		clean_kernel 	clean_tools					\
+		reset_kernel 	reset_tools
 
 
 kernel:
 	mkdir -p $(KERNEL_DIR)
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(CORES) zImage modules dtbs
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) zImage modules dtbs
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
-	cd $(LINUX_DIR); ./scripts/mkknlimg $(LINUX_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
+	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
 
 
 patch_irq:
@@ -33,12 +41,13 @@ patch_xenomai: patch_irq
 
 
 config: patch_xenomai
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(CORES) bcmrpi_defconfig
-	cp kernel-patch/kernel-config $(LINUX_DIR)/.config
+	mkdir -p $(KBUILD_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
+	# cp kernel-patch/kernel-config $(KBUILD_DIR)/.config
 
 
 menuconfig:
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(CORES) menuconfig
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) menuconfig
 
 
 copy_tosd:
@@ -51,29 +60,33 @@ copy_tosd:
 
 config.txt:
 	@echo "kernel=kernel.img" >> $(BOOT_DIR)config.txt
-	@echo "device_tree=bcm2708-rpi-0-w.dtb" >> $(BOOT_DIR)config.txt
+	# @echo "device_tree=bcm2708-rpi-0-w.dtb" >> $(BOOT_DIR)config.txt
+	@echo "device_tree=bcm2708-rpi-b-plus.dtb" >> $(BOOT_DIR)config.txt
+	@echo "dtoverlay=gpio-estop" >> $(BOOT_DIR)config.txt
 
 
 cmdline.txt:
 	@echo -n " dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0" >> $(BOOT_DIR)cmdline.txt
 
 
-drivers:
-	make -C drivers/RTDM_gpio_estop
-	# make -C drivers/RTDM_gpio_driver
-	# make -C drivers/RTDM_gpio_sampling_driver
-	# make -C drivers/RTDM_gpio_wave_driver
-	# make -C drivers/RTDM_timer_driver
+prepare_drivers:
+	cp -r drivers/stufa $(LINUX_DIR)/drivers/
+	@printf "\nobj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
 
 
-drivers_dtoverlay:
-	make -C drivers/RTDM_gpio_estop dtoverlay
+drivers: prepare_drivers
+	cp rtdm-gpio-estop.c $(LINUX_DIR)/drivers/stufa/estop/
+
+
+dtoverlay:
+	cp drivers/dtoverlay/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
 
 tools:
 	cd $(XENOMAI_DIR); ./scripts/bootstrap --with-core=cobalt –enable-debug=partial
-	cd $(XENOMAI_DIR); ./configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --with-core=cobalt --enable-smp CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
-	make -C $(XENOMAI_DIR) $(CORES)
+	mkdir -p $(XBUILD_DIR)
+	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --with-core=cobalt --enable-smp CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
+	make -C $(XBUILD_DIR) $(CORES)
 
 
 tools_install:
@@ -82,18 +95,18 @@ tools_install:
 
 
 clean_kernel:
-	cd $(LINUX_DIR); git reset --hard; git clean -d -f;
 	rm -rf $(KERNEL_DIR)
+	rm -rf $(KBUILD_DIR)
 
 
 clean_tools:
-	cd $(XENOMAI_DIR); git reset --hard; git clean -d -f;
 	rm -rf $(TOOLS_DIR)
+	rm -rf $(XBUILD_DIR)
 
 
-clean_drivers:
-	make -C drivers/RTDM_gpio_estop clean
-	# make -C drivers/RTDM_gpio_driver clean
-	# make -C drivers/RTDM_gpio_wave_driver clean
-	# make -C drivers/RTDM_timer_driver clean
-	# make -C drivers/RTDM_gpio_sampling_driver clean
+reset_kernel:
+	cd $(LINUX_DIR); git reset --hard; git clean -fxd :/;
+
+
+reset_tools:
+	cd $(XENOMAI_DIR); git reset --hard; git clean -fxd :/;

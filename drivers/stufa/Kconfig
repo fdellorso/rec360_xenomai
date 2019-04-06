@@ -1,0 +1,5 @@
+menu "StuFA RTDM"
+
+source "drivers/stufa/estop/Kconfig"
+
+endmenu

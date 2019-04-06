@@ -17,7 +17,9 @@
 			"module.h": "c",
 			"interrupt.h": "c",
 			"gpio.h": "c",
-			"time.h": "c"
+			"time.h": "c",
+			"pwm.h": "c",
+			"of.h": "c"
 		}
 	}
 }
