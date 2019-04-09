@@ -100,6 +100,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
 	pitft35-resistive.dtbo \
 	pps-gpio.dtbo \
 	pwm.dtbo \
+	pwm1.dtbo \
 	pwm-2chan.dtbo \
 	pwm-ir-tx.dtbo \
 	qca7000.dtbo \

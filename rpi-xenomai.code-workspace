@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "/home/francesco/bcm2835-1.58"
 		}
 	],
 	"settings": {
@@ -19,7 +22,12 @@
 			"gpio.h": "c",
 			"time.h": "c",
 			"pwm.h": "c",
-			"of.h": "c"
+			"of.h": "c",
+			"mutex.h": "c",
+			"bcm2835.h": "c",
+			"clk.h": "c",
+			"clk-conf.h": "c",
+			"heap.h": "c"
 		}
 	}
 }

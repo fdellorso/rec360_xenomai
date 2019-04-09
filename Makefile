@@ -73,9 +73,12 @@ overlays:
 
 
 tools:
-	cd $(XENOMAI_DIR); ./scripts/bootstrap --with-core=cobalt –enable-debug=partial
+	cd $(XENOMAI_DIR); ./scripts/bootstrap
+	# --with-core=cobalt --enable-debug=partial
 	mkdir -p $(XBUILD_DIR)
-	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --with-core=cobalt --enable-smp CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
+	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld \
+											   --with-core=cobalt
+											   # --enable-smp (Symmetric multiprocessing)
 	make -C $(XBUILD_DIR) $(CORES)
 
 
@@ -85,6 +88,7 @@ tools_install:
 
 
 clean_kernel:
+	rm -rf $(KPACKAGE_DIR)
 	rm -rf $(KERNEL_DIR)
 	rm -rf $(KBUILD_DIR)
 
