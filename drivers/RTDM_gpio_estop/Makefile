@@ -9,7 +9,7 @@ all:: modules
 
 .PHONY: modules
 modules:
-	${MAKE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C ${LINUX_DIR} SUBDIRS=${MODULE_DIR} modules
+	${MAKE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C ${KBUILD_DIR} SUBDIRS=${MODULE_DIR} modules
 
 .PHONY: clean
 clean::

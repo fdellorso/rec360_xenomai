@@ -2,9 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "/home/francesco/bcm2835-1.58"
 		}
 	],
 	"settings": {
@@ -27,7 +24,8 @@
 			"bcm2835.h": "c",
 			"clk.h": "c",
 			"clk-conf.h": "c",
-			"heap.h": "c"
+			"heap.h": "c",
+			"dmaengine.h": "c"
 		}
 	}
 }

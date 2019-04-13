@@ -1,26 +1,37 @@
 #include <linux/fs.h>
 #include <linux/pwm.h>
-#include <linux/dmaengine.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
 
 #include <cobalt/kernel/rtdm/driver.h>
 
-static struct pwm_device drv8825;
+// #include <src/bcm2835.h>
 
-static struct device pwm1;
+// #define DRV8825_DIVISOR		( BCM2835_PWM_CLOCK_DIVIDER_2048 | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_1024 | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_512  | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_128  | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_32   | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_4    | \
+// 							  BCM2835_PWM_CLOCK_DIVIDER_2 )
 
-static void drv8825_handler(rtdm_timer_t *timer)
+static struct pwm_chip bcm2835pwm;
+static struct pwm_state bcm2835pwmstate;
+
+static rtdm_irq_t irq_rtdm_dma;
+
+static int dma_handler(rtdm_irq_t *irq)
 {
 
+
+	return RTDM_IRQ_HANDLED;
 }
 
 static int __init drv8825_init (void)
 {
 	int ret = 0;
 
-	pwm_config(&drv8825, 10, 10);
-
+	
 
 	return ret;
 }

@@ -1,16 +1,19 @@
-export LINUX_DIR			:= $(PWD)/kernel
+export LINUX_DIR			:= $(PWD)/kernel			# commit 802d8776632344a4354d8ef5f142611a4c878570
 export KBUILD_DIR			:= $(PWD)/kernel-build
 export KERNEL_DIR			:= $(PWD)/kernel-output
 export KPACKAGE_DIR			:= $(PWD)/kernel-package
-export XENOMAI_DIR			:= $(PWD)/xenomai
+export XENOMAI_DIR			:= $(PWD)/xenomai			# v3.0.8 fbc3271096c63b21fe895c66ba20b1d10d72ff48
 export XBUILD_DIR			:= $(PWD)/xenomai-build
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
 
-export CORES				:= -j8
+export BCM2835LIB_DIR		:= /home/francesco/rpi-xenomai/bcm2835-1.58
+
+export CORES				:= -j2
 
 export ARCH					:= arm
 export KERNEL				:= kernel
 export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+# tools 5caa7046982f0539cf5380f94da04b31129ed521
 
 export BOOT_DIR				?= /media/francesco/boot/
 export ROOT_DIR				?= /media/francesco/rootfs/
@@ -20,9 +23,11 @@ export ROOT_DIR				?= /media/francesco/rootfs/
 		config 			menuconfig		\
 		patch_irq		patch_xenomai 	\
 		prepare_drivers	drivers			\
-		overlays 						\
+		drivers_local	overlays 		\
 		tools 			tools_install	\
+		library							\
 		clean_kernel 	clean_tools		\
+		clean_drivers	clean_library	\
 		reset_kernel 	reset_tools
 
 
@@ -68,6 +73,11 @@ drivers:
 	cp drivers/RTDM_gpio_estop/rtdm-gpio-estop.c $(LINUX_DIR)/drivers/stufa/estop/
 
 
+drivers_local:
+	# make -C drivers/RTDM_gpio_estop
+	make -C drivers/RTDM_pwm_drv8825
+
+
 overlays:
 	cp drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
@@ -87,6 +97,14 @@ tools_install:
 	make -C $(XENOMAI_DIR) $(CORES) install DESTDIR=$(TOOLS_DIR)
 
 
+library:
+	export AR="${CROSS_COMPILE}ar"; \
+	export RANLIB="${CROSS_COMPILE}ranlib"; \
+	export STRIP="${CROSS_COMPILE}strip"; \
+	cd $(BCM2835LIB_DIR); ./configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --target=arm-linux-gnueabihf CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
+	make -C $(BCM2835LIB_DIR) $(CORES)
+
+
 clean_kernel:
 	rm -rf $(KPACKAGE_DIR)
 	rm -rf $(KERNEL_DIR)
@@ -96,6 +114,15 @@ clean_kernel:
 clean_tools:
 	rm -rf $(TOOLS_DIR)
 	rm -rf $(XBUILD_DIR)
+
+
+clean_drivers:
+	# make -C drivers/RTDM_gpio_estop clean
+	make -C drivers/RTDM_pwm_drv8825 clean
+
+
+clean_library:
+	make -C $(BCM2835LIB_DIR) clean
 
 
 reset_kernel:

@@ -1,0 +1,6 @@
+config DRV8825
+tristate "DMA PWM for DRV8825"
+depends on ARM
+default m if ARM
+help
+  DMA PWM module.
