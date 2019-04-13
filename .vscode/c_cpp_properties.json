@@ -7,8 +7,7 @@
                 "${workspaceFolder}/kernel/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/kernel-build/include",
-                "${workspaceFolder}/xenomai-build/include",
-                "${workspaceFolder}/bcm2835-1.58"
+                "${workspaceFolder}/xenomai-build/include"
             ],
             "defines": [],
             "compilerPath": "${workspaceFolder}/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gcc",
