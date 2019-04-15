@@ -1,0 +1,6 @@
+config LTAB
+tristate "DMA Load Table for PWM"
+depends on ARM
+default m if ARM
+help
+  DMA Load Table for PWM module.

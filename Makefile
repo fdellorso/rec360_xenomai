@@ -1,8 +1,14 @@
-export LINUX_DIR			:= $(PWD)/kernel			# commit 802d8776632344a4354d8ef5f142611a4c878570
+# Linux 4.14.85		branch rpi-4.14.y		commit 802d8776632344a4354d8ef5f142611a4c878570
+# Linux 4.14.110	branch rpi-4.14.y		Not committed on https://github.com/raspberrypi/linux
+# Linux 4.19.33		branch rpi-4.19.y		commit 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85
+# Xenomai v3.0.8	branch stable/v3.0.x	tags v3.0.8; commit fbc3271096c63b21fe895c66ba20b1d10d72ff48
+# tools latest		branch master			commit 5caa7046982f0539cf5380f94da04b31129ed521
+
+export LINUX_DIR			:= $(PWD)/kernel
 export KBUILD_DIR			:= $(PWD)/kernel-build
 export KERNEL_DIR			:= $(PWD)/kernel-output
 export KPACKAGE_DIR			:= $(PWD)/kernel-package
-export XENOMAI_DIR			:= $(PWD)/xenomai			# v3.0.8 fbc3271096c63b21fe895c66ba20b1d10d72ff48
+export XENOMAI_DIR			:= $(PWD)/xenomai
 export XBUILD_DIR			:= $(PWD)/xenomai-build
 export TOOLS_DIR			:= ${PWD}/xenomai-tools
 
@@ -13,7 +19,6 @@ export CORES				:= -j2
 export ARCH					:= arm
 export KERNEL				:= kernel
 export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
-# tools 5caa7046982f0539cf5380f94da04b31129ed521
 
 export BOOT_DIR				?= /media/francesco/boot/
 export ROOT_DIR				?= /media/francesco/rootfs/

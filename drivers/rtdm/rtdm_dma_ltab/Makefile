@@ -2,7 +2,7 @@ ARCH = arm
 MODULE_DIR = $(shell pwd)
 EXTRA_CFLAGS := -I${XENOMAI_DIR}/include
 
-obj-m += rtdm-pwm-drv8825.o
+obj-m += rtdm-dma-ltab.o
 
 .PHONY: all
 all:: modules
