@@ -20,7 +20,7 @@
  */
 
 #include <linux/module.h>
-#include <linux/pwm.h>
+#include <linux/pwm_serializer.h>
 #include <linux/radix-tree.h>
 #include <linux/list.h>
 #include <linux/mutex.h>

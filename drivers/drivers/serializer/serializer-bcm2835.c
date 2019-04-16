@@ -12,19 +12,19 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
-#include <linux/pwm.h>
+#include <linux/pwm_serializer.h>
 
-#define PWM_CONTROL		0x000
+#define PWM_CONTROL				0x000
 #define PWM_CONTROL_SHIFT(x)	((x) * 8)
-#define PWM_CONTROL_MASK	0xff
-#define PWM_MODE		0x80		/* set timer in PWM mode */
-#define PWM_ENABLE		(1 << 0)
-#define PWM_POLARITY		(1 << 4)
+#define PWM_CONTROL_MASK		0xff
+#define PWM_MODE				0x80		/* set timer in PWM mode */
+#define PWM_ENABLE				(1 << 0)
+#define PWM_POLARITY			(1 << 4)
 
-#define PERIOD(x)		(((x) * 0x10) + 0x10)
-#define DUTY(x)			(((x) * 0x10) + 0x14)
+#define PERIOD(x)				(((x) * 0x10) + 0x10)
+#define DUTY(x)					(((x) * 0x10) + 0x14)
 
-#define MIN_PERIOD		108		/* 9.2 MHz max. PWM clock */
+#define MIN_PERIOD				108		/* 9.2 MHz max. PWM clock */
 
 struct bcm2835_pwm {
 	struct pwm_chip chip;

@@ -25,7 +25,18 @@
 			"clk.h": "c",
 			"clk-conf.h": "c",
 			"heap.h": "c",
-			"dmaengine.h": "c"
+			"dmaengine.h": "c",
+			"byteorder.h": "c",
+			"kobject.h": "c",
+			"kernel.h": "c",
+			"linkage.h": "c",
+			"stddef.h": "c",
+			"compiler.h": "c",
+			"kref.h": "c",
+			"kobject_ns.h": "c",
+			"typecheck.h": "c",
+			"export.h": "c",
+			"stringify.h": "c"
 		}
 	}
 }

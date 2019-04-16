@@ -69,9 +69,9 @@ menuconfig:
 
 
 prepare_drivers:
-	cp -r drivers/stufa $(LINUX_DIR)/drivers/
+	cp -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
 	@echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
-	patch $(LINUX_DIR)/drivers/Kconfig drivers/Kconfig.patch
+	patch $(LINUX_DIR)/drivers/drivers/Kconfig drivers/Kconfig.patch
 
 
 drivers:
@@ -79,8 +79,6 @@ drivers:
 
 
 drivers_local:
-	# make -C drivers/RTDM_gpio_estop
-	make -C drivers/RTDM_pwm_drv8825
 
 
 overlays:
@@ -91,8 +89,10 @@ tools:
 	cd $(XENOMAI_DIR); ./scripts/bootstrap
 	# --with-core=cobalt --enable-debug=partial
 	mkdir -p $(XBUILD_DIR)
-	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld \
-											   --with-core=cobalt
+	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" \
+											   --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf \
+											   --with-core=cobalt \
+											   CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
 											   # --enable-smp (Symmetric multiprocessing)
 	make -C $(XBUILD_DIR) $(CORES)
 
@@ -122,8 +122,6 @@ clean_tools:
 
 
 clean_drivers:
-	# make -C drivers/RTDM_gpio_estop clean
-	make -C drivers/RTDM_pwm_drv8825 clean
 
 
 clean_library:
