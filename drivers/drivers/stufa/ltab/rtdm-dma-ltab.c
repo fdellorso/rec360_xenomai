@@ -1,5 +1,5 @@
 #include <linux/fs.h>
-#include <linux/dma.h>
+#include <linux/dmaengine.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
 

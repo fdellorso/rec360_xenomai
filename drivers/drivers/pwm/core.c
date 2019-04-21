@@ -20,7 +20,7 @@
  */
 
 #include <linux/module.h>
-#include <linux/pwm_serializer.h>
+#include <linux/pwm_dev.h>
 #include <linux/radix-tree.h>
 #include <linux/list.h>
 #include <linux/mutex.h>
@@ -530,6 +530,20 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
 
 			pwm->state.enabled = state->enabled;
 		}
+
+		if (   state->serialiser != pwm->state.serialiser
+			|| state->silence != pwm->state.silence
+			|| state->usefifo != pwm->state.usefifo) {
+			err = pwm->chip->ops->serialiser(pwm->chip, pwm,
+											 state->serialiser, state->silence,
+											 state->usefifo);
+			if (err)
+				return err;
+
+			if(state->serialiser != NULL) pwm->state.serialiser = state->serialiser;
+			if(state->silence != NULL) pwm->state.silence = state->silence;
+			if(state->usefifo != NULL) pwm->state.usefifo = state->usefifo;
+		}
 	}
 
 	return 0;
@@ -562,6 +576,24 @@ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
 	return err;
 }
 EXPORT_SYMBOL_GPL(pwm_capture);
+
+unsigned long pwm_get_clock(struct pwm_device *pwm)
+{
+	unsigned long clock;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->get_clock)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	clock = pwm->chip->ops->get_clock(pwm->chip);
+	mutex_unlock(&pwm_lock);
+
+	return clock;
+}
+EXPORT_SYMBOL_GPL(pwm_get_clock);
 
 /**
  * pwm_adjust_config() - adjust the current PWM config to the PWM arguments

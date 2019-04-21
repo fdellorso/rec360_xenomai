@@ -36,7 +36,12 @@
 			"kobject_ns.h": "c",
 			"typecheck.h": "c",
 			"export.h": "c",
-			"stringify.h": "c"
+			"stringify.h": "c",
+			"task.h": "c",
+			"threadobj.h": "c",
+			"sched.h": "c",
+			"types.h": "c",
+			"rtdm.h": "c"
 		}
 	}
 }

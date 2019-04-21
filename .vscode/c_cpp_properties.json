@@ -5,6 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/kernel/include",
+                "${workspaceFolder}/xenomai/include",
+                "${workspaceFolder}/kernel/arch/arm/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/kernel-build/include",
                 "${workspaceFolder}/xenomai-build/include",

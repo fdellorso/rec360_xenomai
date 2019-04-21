@@ -10,7 +10,7 @@ export KERNEL_DIR			:= $(PWD)/kernel-output
 export KPACKAGE_DIR			:= $(PWD)/kernel-package
 export XENOMAI_DIR			:= $(PWD)/xenomai
 export XBUILD_DIR			:= $(PWD)/xenomai-build
-export TOOLS_DIR			:= ${PWD}/xenomai-tools
+export XTOOLS_DIR			:= ${PWD}/xenomai-tools
 
 export BCM2835LIB_DIR		:= /home/francesco/rpi-xenomai/bcm2835-1.58
 
@@ -20,20 +20,18 @@ export ARCH					:= arm
 export KERNEL				:= kernel
 export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
 
-export BOOT_DIR				?= /media/francesco/boot/
-export ROOT_DIR				?= /media/francesco/rootfs/
+export BOOT_DIR				?= /media/francesco/boot
+export ROOT_DIR				?= /media/francesco/rootfs
 
 
 .PHONY: kernel			kernel_package	\
+		kernel_copy2sd					\
 		config 			menuconfig		\
 		patch_irq		patch_xenomai 	\
-		prepare_drivers	drivers			\
-		drivers_local	overlays 		\
-		tools 			tools_install	\
-		library							\
-		clean_kernel 	clean_tools		\
-		clean_drivers	clean_library	\
-		reset_kernel 	reset_tools
+		prepare_drivers	overlays 		\
+		xtools 			xtools_install	\
+		clean_kernel 	clean_xtools	\
+		reset_kernel 	reset_xtools
 
 
 kernel:
@@ -50,6 +48,14 @@ kernel_package:
 	cd $(KERNEL_DIR); tar czf $(KPACKAGE_DIR)/xenomai-kernel.tgz *
 
 
+kernel_copy2sd:
+	sudo cp 	$(KERNEL_DIR)/*.dtb			$(BOOT_DIR)
+	sudo cp -rd $(KERNEL_DIR)/boot/*		$(BOOT_DIR)
+	sudo cp -dr $(KERNEL_DIR)/lib/*			$(ROOT_DIR)/lib/
+	sudo cp -d	$(KERNEL_DIR)/overlays/*	$(BOOT_DIR)/overlays/
+	sudo cp -d	$(KERNEL_DIR)/bcm*			$(BOOT_DIR)
+
+
 patch_irq:
 	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
@@ -61,7 +67,9 @@ patch_xenomai: patch_irq
 config: patch_xenomai
 	mkdir -p $(KBUILD_DIR)
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
-	patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch
+	if ! patch -R -p0 -s -f --dry-run patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; then \
+		patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; \
+	fi
 
 
 menuconfig:
@@ -69,23 +77,29 @@ menuconfig:
 
 
 prepare_drivers:
+	# PWM Serialiser modified driver
+	cp drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
+	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+		  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
+	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
+	# StuFA Drivers & Task Module
 	cp -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
-	@echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile
-	patch $(LINUX_DIR)/drivers/drivers/Kconfig drivers/Kconfig.patch
-
-
-drivers:
-	cp drivers/RTDM_gpio_estop/rtdm-gpio-estop.c $(LINUX_DIR)/drivers/stufa/estop/
-
-
-drivers_local:
+	# Enable StuFA Drivers to compile
+	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
+		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
+	fi
+	# Add StuFA Driver Folder
+	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; then \
+		patch $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; \
+	fi
 
 
 overlays:
 	cp drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
 
-tools:
+xtools:
 	cd $(XENOMAI_DIR); ./scripts/bootstrap
 	# --with-core=cobalt --enable-debug=partial
 	mkdir -p $(XBUILD_DIR)
@@ -97,17 +111,9 @@ tools:
 	make -C $(XBUILD_DIR) $(CORES)
 
 
-tools_install:
-	mkdir -p $(TOOLS_DIR)
-	make -C $(XENOMAI_DIR) $(CORES) install DESTDIR=$(TOOLS_DIR)
-
-
-library:
-	export AR="${CROSS_COMPILE}ar"; \
-	export RANLIB="${CROSS_COMPILE}ranlib"; \
-	export STRIP="${CROSS_COMPILE}strip"; \
-	cd $(BCM2835LIB_DIR); ./configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf --target=arm-linux-gnueabihf CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
-	make -C $(BCM2835LIB_DIR) $(CORES)
+xtools_install:
+	mkdir -p $(XTOOLS_DIR)
+	make -C $(XBUILD_DIR) $(CORES) install DESTDIR=$(XTOOLS_DIR)
 
 
 clean_kernel:
@@ -116,21 +122,14 @@ clean_kernel:
 	rm -rf $(KBUILD_DIR)
 
 
-clean_tools:
-	rm -rf $(TOOLS_DIR)
+clean_xtools:
+	rm -rf $(XTOOLS_DIR)
 	rm -rf $(XBUILD_DIR)
-
-
-clean_drivers:
-
-
-clean_library:
-	make -C $(BCM2835LIB_DIR) clean
 
 
 reset_kernel:
 	cd $(LINUX_DIR); git reset --hard; git clean -fxd :/;
 
 
-reset_tools:
+reset_xtools:
 	cd $(XENOMAI_DIR); git reset --hard; git clean -fxd :/;
