@@ -9,7 +9,7 @@
 #define GPIO_ESTOP2 21				// PIN40 -> GPIO21
 static rtdm_irq_t irq_rtdm_estop;
 
-#define PERIOD_NSEC	50000000
+#define PERIOD_NSEC	5000000			// 5ms
 static rtdm_timer_t timer_estop;
 
 #define FAKE_EVENT_LIMIT 100

@@ -540,9 +540,9 @@ int pwm_apply_state(struct pwm_device *pwm, struct pwm_state *state)
 			if (err)
 				return err;
 
-			if(state->serialiser != NULL) pwm->state.serialiser = state->serialiser;
-			if(state->silence != NULL) pwm->state.silence = state->silence;
-			if(state->usefifo != NULL) pwm->state.usefifo = state->usefifo;
+			pwm->state.serialiser = state->serialiser;
+			pwm->state.silence = state->silence;
+			pwm->state.usefifo = state->usefifo;
 		}
 	}
 
@@ -594,6 +594,97 @@ unsigned long pwm_get_clock(struct pwm_device *pwm)
 	return clock;
 }
 EXPORT_SYMBOL_GPL(pwm_get_clock);
+
+int pwm_set_fifo(struct pwm_device *pwm, u32 value)
+{
+	int err;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->set_fifo)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	err = pwm->chip->ops->set_fifo(pwm->chip, value);
+	mutex_unlock(&pwm_lock);
+
+	return err;
+}
+EXPORT_SYMBOL_GPL(pwm_set_fifo);
+
+unsigned int pwm_get_status(struct pwm_device *pwm)
+{
+	unsigned int status;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->get_status)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	status = pwm->chip->ops->get_status(pwm->chip);
+	mutex_unlock(&pwm_lock);
+
+	return status;
+}
+EXPORT_SYMBOL_GPL(pwm_get_status);
+
+int pwm_clear_status(struct pwm_device *pwm)
+{
+	int err;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->clear_status)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	err = pwm->chip->ops->clear_status(pwm->chip);
+	mutex_unlock(&pwm_lock);
+
+	return err;
+}
+EXPORT_SYMBOL_GPL(pwm_clear_status);
+
+int pwm_clear_fifo(struct pwm_device *pwm)
+{
+	int err;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->clear_fifo)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	err = pwm->chip->ops->clear_fifo(pwm->chip);
+	mutex_unlock(&pwm_lock);
+
+	return err;
+}
+EXPORT_SYMBOL_GPL(pwm_clear_fifo);
+
+int pwm_set_dma(struct pwm_device *pwm,
+				bool dma_enable, u8 dma_dreq, u8 dma_panic)
+{
+	int err;
+
+	if (!pwm || !pwm->chip->ops)
+		return -EINVAL;
+
+	if (!pwm->chip->ops->set_dma)
+		return -ENOSYS;
+
+	mutex_lock(&pwm_lock);
+	err = pwm->chip->ops->set_dma(pwm->chip, dma_enable, dma_dreq, dma_panic);
+	mutex_unlock(&pwm_lock);
+
+	return err;
+}
+EXPORT_SYMBOL_GPL(pwm_set_dma);
 
 /**
  * pwm_adjust_config() - adjust the current PWM config to the PWM arguments

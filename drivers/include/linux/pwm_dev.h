@@ -60,9 +60,9 @@ struct pwm_state {
 	unsigned int duty_cycle;
 	enum pwm_polarity polarity;
 	bool enabled;
-	bool *serialiser;
-	bool *silence;
-	bool *usefifo;
+	bool serialiser;
+	bool silence;
+	bool usefifo;
 };
 
 /**
@@ -266,7 +266,7 @@ struct pwm_ops {
 	int (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
 		      int duty_ns, int period_ns);
 	int (*serialiser)(struct pwm_chip *chip, struct pwm_device *pwm,
-					  bool *serialiser, bool *silence, bool *usefifo);
+					  bool serialiser, bool silence, bool usefifo);
 	int (*set_polarity)(struct pwm_chip *chip, struct pwm_device *pwm,
 			    enum pwm_polarity polarity);
 	int (*capture)(struct pwm_chip *chip, struct pwm_device *pwm,
@@ -280,6 +280,12 @@ struct pwm_ops {
 	unsigned long (*get_clock)(struct pwm_chip *chip);
 	int (*set_clock)(struct pwm_chip *chip, struct pwm_device *pwm,
 					 unsigned long divisor);
+	int (*set_fifo)(struct pwm_chip *chip, u32 value);
+	unsigned int (*get_status)(struct pwm_chip *chip);
+	int (*clear_status)(struct pwm_chip *chip);
+	int (*clear_fifo)(struct pwm_chip *chip);
+	int (*set_dma)(struct pwm_chip *chip,
+				   bool dma_enable, u8 dma_dreq, u8 dma_panic);
 #ifdef CONFIG_DEBUG_FS
 	void (*dbg_show)(struct pwm_chip *chip, struct seq_file *s);
 #endif
@@ -356,8 +362,8 @@ static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
 	return pwm_apply_state(pwm, &state);
 }
 
-static inline int pwm_serialiser(struct pwm_device *pwm, bool *serialiser,
-			     				 bool *silence, bool *usefifo)
+static inline int pwm_serialiser(struct pwm_device *pwm, bool serialiser,
+			     				 bool silence, bool usefifo)
 {
 	struct pwm_state state;
 
@@ -365,13 +371,19 @@ static inline int pwm_serialiser(struct pwm_device *pwm, bool *serialiser,
 		return -EINVAL;
 
 	pwm_get_state(pwm, &state);
-	if (state.serialiser == serialiser && state.silence == silence
-									   && state.usefifo == usefifo)
+	if (   state.serialiser == serialiser
+		&& state.silence == silence
+		&& state.usefifo == usefifo)
 		return 0;
 
 	state.serialiser = serialiser;
 	state.silence = silence;
 	state.usefifo = usefifo;
+
+	/* To avoid check of apply_state */
+	state.duty_cycle = 100;
+	state.period = 200;
+
 	return pwm_apply_state(pwm, &state);
 }
 
@@ -455,6 +467,12 @@ static inline void pwm_disable(struct pwm_device *pwm)
 int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
 		unsigned long timeout);
 unsigned long pwm_get_clock(struct pwm_device *pwm);
+int pwm_set_fifo(struct pwm_device *pwm, u32 value);
+unsigned int pwm_get_status(struct pwm_device *pwm);
+int pwm_clear_status(struct pwm_device *pwm);
+int pwm_clear_fifo(struct pwm_device *pwm);
+int pwm_set_dma(struct pwm_device *pwm,
+				bool dma_enable, u8 dma_dreq, u8 dma_panic);
 int pwm_set_chip_data(struct pwm_device *pwm, void *data);
 void *pwm_get_chip_data(struct pwm_device *pwm);
 

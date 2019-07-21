@@ -12,6 +12,7 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
+#include <linux/delay.h>
 #include <linux/pwm_dev.h>
 
 #define PWM_CONTROL				0x000
@@ -36,6 +37,10 @@
 
 #define MIN_PERIOD				108		/* 9.2 MHz max. PWM clock */
 
+#define CONST_DELAY				1000
+
+extern const char *__clk_get_name(const struct clk *);
+
 struct bcm2835_pwm {
 	struct pwm_chip chip;
 	struct device *dev;
@@ -55,8 +60,8 @@ static int bcm2835_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 
 	value = readl(pc->base + PWM_CONTROL);
 	value &= ~(PWM_CONTROL_MASK << PWM_CONTROL_SHIFT(pwm->hwpwm));
-	value |= (PWM_MODE << PWM_CONTROL_SHIFT(pwm->hwpwm));
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
 
 	return 0;
 }
@@ -69,6 +74,7 @@ static void bcm2835_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
 	value = readl(pc->base + PWM_CONTROL);
 	value &= ~(PWM_CONTROL_MASK << PWM_CONTROL_SHIFT(pwm->hwpwm));
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
 }
 
 static int bcm2835_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
@@ -77,6 +83,7 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
 	unsigned long rate = clk_get_rate(pc->clk);
 	unsigned long scaler;
+	// u32 value;
 
 	if (!rate) {
 		dev_err(pc->dev, "failed to get clock rate\n");
@@ -91,8 +98,18 @@ static int bcm2835_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 		return -EINVAL;
 	}
 
-	writel(duty_ns / scaler, pc->base + DUTY(pwm->hwpwm));
-	writel(period_ns / scaler, pc->base + PERIOD(pwm->hwpwm));
+	// value = readl(pc->base + PWM_CONTROL);
+	// value |= (PWM_MODE << PWM_CONTROL_SHIFT(pwm->hwpwm));
+	// writel(value, pc->base + PWM_CONTROL);
+	// udelay(10);
+
+	// writel(duty_ns / scaler, pc->base + DUTY(pwm->hwpwm));
+	// writel(period_ns / scaler, pc->base + PERIOD(pwm->hwpwm));
+
+	// writel(duty_ns, pc->base + DUTY(pwm->hwpwm));
+	// udelay(10);
+	// writel(period_ns, pc->base + PERIOD(pwm->hwpwm));
+	// udelay(10);
 
 	return 0;
 }
@@ -105,6 +122,7 @@ static int bcm2835_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
 	value = readl(pc->base + PWM_CONTROL);
 	value |= PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm);
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
 
 	return 0;
 }
@@ -117,6 +135,7 @@ static void bcm2835_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
 	value = readl(pc->base + PWM_CONTROL);
 	value &= ~(PWM_ENABLE << PWM_CONTROL_SHIFT(pwm->hwpwm));
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
 }
 
 static int bcm2835_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
@@ -133,6 +152,7 @@ static int bcm2835_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
 		value |= PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm);
 
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
 
 	return 0;
 }
@@ -140,7 +160,10 @@ static int bcm2835_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
 static unsigned long bcm2835_get_clock(struct pwm_chip *chip)
 {
 	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
-	unsigned long rate = clk_get_rate(pc->clk);		// clk_get_parent(pc->clk);
+	unsigned long rate = clk_get_rate(pc->clk);
+
+	// struct clk *parent_clk = clk_get_parent(pc->clk);
+	// printk(KERN_INFO "Clock name: %s\tParent name: %s\n", __clk_get_name(pc->clk), __clk_get_name(parent_clk));
 
 	if (!rate) {
 		dev_err(pc->dev, "failed to get clock rate\n");
@@ -189,65 +212,68 @@ static int bcm2835_set_clock(struct pwm_chip *chip, struct pwm_device *pwm,
 }
 
 static int bcm2835_set_dma(struct pwm_chip *chip,
-						   bool *dma_enable, u8 *dma_dreq, u8 *dma_panic)
+						   bool dma_enable, u8 dma_dreq, u8 dma_panic)
 {
 	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
 	u32 value;
 
-	if((*dma_dreq < 0x00 || *dma_dreq > 0xFF) && dma_dreq != NULL) {
+	if((dma_dreq < 0x00 || dma_dreq > 0xFF)) {
 		dev_err(pc->dev, "DMA Data Request Threshold %u not supported, minimum 0x00, maximum 0xFF\n",
 						(unsigned int)dma_dreq);
 		return -EINVAL;
 	}
 
-	if((*dma_panic < 0x00 || *dma_panic > 0xFF) && dma_panic != NULL) {
+	if((dma_panic < 0x00 || dma_panic > 0xFF)) {
 		dev_err(pc->dev, "DMA Panic Threshold %u not supported, minimum 0x00, maximum 0xFF\n",
 						(unsigned int)dma_panic);
 		return -EINVAL;
 	}
 
 	value = readl(pc->base + PWM_DMACONF);
-	if(dma_enable != NULL) {
-		if(*dma_enable == true) value |=  DMA_ENABLE;
-		else					value &= ~DMA_ENABLE;
-	}
-	if(dma_dreq != NULL) {
-		value &= ~(0x000000FF << 0);
-		value &=  ((*dma_dreq & 0x000000FF) << 0);
-	}
-	if(dma_panic != NULL) {
-		value &= ~(0x000000FF << 8);
-		value &=  ((*dma_panic & 0x000000FF) << 8);
-	}
+	
+	// value |=  ((dma_dreq & 0x000000FF) << 0);
+	// value |=  ((dma_panic & 0x000000FF) << 8);
+
+	if(dma_enable == true) value |=  DMA_ENABLE;
+	else			   	   value &= ~DMA_ENABLE;
+
+	// printk(KERN_INFO "PWM DMAC: 0x%x\n", value);
+
 	writel(value, pc->base + PWM_DMACONF);
+	udelay(CONST_DELAY);
 
 	return 0;
 }
 
 static int bcm2835_serialiser_config(struct pwm_chip *chip, struct pwm_device *pwm,
-			      					 bool *serialiser, bool *silence_bit, bool *use_fifo)
+			      					 bool serialiser, bool silence_bit, bool use_fifo)
 {
 	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
 	u32 value;
 
 	value = readl(pc->base + PWM_CONTROL);
 
-	if(serialiser != NULL) {
-		if(*serialiser == true) value |=  (PWM_SERIALISER << PWM_CONTROL_SHIFT(pwm->hwpwm));
-		else					value &= ~(PWM_SERIALISER << PWM_CONTROL_SHIFT(pwm->hwpwm));
-	}
+	if(serialiser == true) value |=  (PWM_SERIALISER << PWM_CONTROL_SHIFT(pwm->hwpwm));
+	else				   value &= ~(PWM_SERIALISER << PWM_CONTROL_SHIFT(pwm->hwpwm));
 
-	if(silence_bit != NULL) {
-		if(*silence_bit == true) value |=  (PWM_SILENCE << PWM_CONTROL_SHIFT(pwm->hwpwm));
-		else					 value &= ~(PWM_SILENCE << PWM_CONTROL_SHIFT(pwm->hwpwm));
-	}
+	if(silence_bit == true) value |=  (PWM_SILENCE << PWM_CONTROL_SHIFT(pwm->hwpwm));
+	else					value &= ~(PWM_SILENCE << PWM_CONTROL_SHIFT(pwm->hwpwm));
 
-	if(use_fifo != NULL) {
-		if(*use_fifo == true) value |=  (PWM_USEFIFO << PWM_CONTROL_SHIFT(pwm->hwpwm));
-		else				  value &= ~(PWM_USEFIFO << PWM_CONTROL_SHIFT(pwm->hwpwm));
-	}
+	if(use_fifo == true) value |=  (PWM_USEFIFO << PWM_CONTROL_SHIFT(pwm->hwpwm));
+	else				 value &= ~(PWM_USEFIFO << PWM_CONTROL_SHIFT(pwm->hwpwm));
+
+	// value |= ~(PWM_REPEATFIFO << PWM_CONTROL_SHIFT(pwm->hwpwm));
+
+	// printk(KERN_INFO "PWM Control Value: 0x%x\n", value);
 
 	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
+
+	// value = readl(pc->base + PERIOD(pwm->hwpwm));
+	// printk(KERN_INFO "PWM Range Value: 0x%x\n", value);
+
+	// value = readl(pc->base + DUTY(pwm->hwpwm));
+	// printk(KERN_INFO "PWM Data Value: 0x%x\n", value);
 
 	return 0;
 }
@@ -263,6 +289,7 @@ static int bcm2835_set_range(struct pwm_chip *chip, struct pwm_device *pwm,
 	}
 
 	writel(value, pc->base + PERIOD(pwm->hwpwm));
+	udelay(CONST_DELAY);
 
 	return 0;
 }
@@ -278,12 +305,12 @@ static int bcm2835_set_data(struct pwm_chip *chip, struct pwm_device *pwm,
 	}
 
 	writel(value, pc->base + DUTY(pwm->hwpwm));
+	udelay(CONST_DELAY);
 
 	return 0;
 }
 
-static int bcm2835_set_fifo(struct pwm_chip *chip, struct pwm_device *pwm,
-							u32 value)
+static int bcm2835_set_fifo(struct pwm_chip *chip, u32 value)
 {
 	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
 
@@ -293,6 +320,7 @@ static int bcm2835_set_fifo(struct pwm_chip *chip, struct pwm_device *pwm,
 	}
 
 	writel(value, pc->base + PWM_FIFO);
+	udelay(CONST_DELAY);
 
 	return 0;
 }
@@ -307,12 +335,43 @@ static unsigned int bcm2835_get_status(struct pwm_chip *chip)
 	return value;
 }
 
+static int bcm2835_clear_status(struct pwm_chip *chip)
+{
+	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
+	u32 value;
+
+	value = 0x1FC;
+
+	writel(value, pc->base + PWM_STATUS);
+	udelay(CONST_DELAY);
+	
+	return 0;
+}
+
+static int bcm2835_clear_fifo(struct pwm_chip *chip)
+{
+	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
+	u32 value;
+
+	value = readl(pc->base + PWM_CONTROL);
+	value |= PWM_CLEARFIFO;
+	writel(value, pc->base + PWM_CONTROL);
+	udelay(CONST_DELAY);
+	
+	return 0;
+}
+
 static const struct pwm_ops bcm2835_pwm_ops = {
 	.request = bcm2835_pwm_request,
 	.free = bcm2835_pwm_free,
 	.config = bcm2835_pwm_config,
 	.serialiser = bcm2835_serialiser_config,
 	.get_clock = bcm2835_get_clock,
+	.set_fifo = bcm2835_set_fifo,
+	.set_dma = bcm2835_set_dma,
+	.get_status = bcm2835_get_status,
+	.clear_status = bcm2835_clear_status,
+	.clear_fifo = bcm2835_clear_fifo,
 	.enable = bcm2835_pwm_enable,
 	.disable = bcm2835_pwm_disable,
 	.set_polarity = bcm2835_set_polarity,

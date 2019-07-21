@@ -14,7 +14,7 @@ export XTOOLS_DIR			:= ${PWD}/xenomai-tools
 
 export BCM2835LIB_DIR		:= /home/francesco/rpi-xenomai/bcm2835-1.58
 
-export CORES				:= -j2
+export CORES				:= -j8
 
 export ARCH					:= arm
 export KERNEL				:= kernel
@@ -54,6 +54,8 @@ kernel_copy2sd:
 	sudo cp -dr $(KERNEL_DIR)/lib/*			$(ROOT_DIR)/lib/
 	sudo cp -d	$(KERNEL_DIR)/overlays/*	$(BOOT_DIR)/overlays/
 	sudo cp -d	$(KERNEL_DIR)/bcm*			$(BOOT_DIR)
+	sudo umount	$(BOOT_DIR)
+	sudo umount $(ROOT_DIR)
 
 
 patch_irq:
@@ -83,6 +85,8 @@ prepare_drivers:
 		  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
 	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
+	# DMA modified driver
+	cp drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
 	# StuFA Drivers & Task Module
 	cp -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
 	# Enable StuFA Drivers to compile

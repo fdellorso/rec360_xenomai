@@ -41,7 +41,20 @@
 			"threadobj.h": "c",
 			"sched.h": "c",
 			"types.h": "c",
-			"rtdm.h": "c"
+			"rtdm.h": "c",
+			"dma-mapping.h": "c",
+			"dma.h": "c",
+			"platform.h": "c",
+			"unistd.h": "c",
+			"delay.h": "c",
+			"pwm_dev.h": "c",
+			"scatterlist.h": "c"
+		},
+		"files.exclude": {
+			"**/.classpath": true,
+			"**/.project": true,
+			"**/.settings": true,
+			"**/.factorypath": true
 		}
 	}
 }
