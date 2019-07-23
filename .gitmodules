@@ -16,3 +16,4 @@
 [submodule "drivers"]
 	path = drivers
 	url = https://github.com/fdellorso/stufa_drivers
+	ignore = dirty
