@@ -13,3 +13,6 @@
 	url = https://github.com/raspberrypi/linux
 	ignore = dirty
 	branch = rpi-4.14.y
+[submodule "drivers"]
+	path = drivers
+	url = https://github.com/fdellorso/stufa_drivers
