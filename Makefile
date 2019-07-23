@@ -93,6 +93,10 @@ prepare_drivers:
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
 	fi
+	# Enable Xenomai Library to DMA Folder
+	if ! grep -q xenomai '$(LINUX_DIR)/drivers/dma/Makefile'; then \
+		echo -n "ccflags-y += -I../xenomai/include" >> $(LINUX_DIR)/drivers/dma/Makefile; \
+	fi
 	# Add StuFA Driver Folder
 	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; then \
 		patch $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; \
