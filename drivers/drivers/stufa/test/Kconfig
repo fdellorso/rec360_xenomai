@@ -1,6 +1,0 @@
-config RTTASK_TEST
-tristate "Real Time Test Task"
-depends on ARM
-default m if ARM
-help
-  emergency stop module.

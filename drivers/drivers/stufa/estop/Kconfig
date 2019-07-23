@@ -1,6 +1,0 @@
-config EMERGENCY_STOP
-tristate "emergency stop driver"
-depends on ARM
-default m if ARM
-help
-  emergency stop module.
