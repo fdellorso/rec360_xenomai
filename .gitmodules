@@ -8,11 +8,7 @@
 	url = https://gitlab.denx.de/Xenomai/xenomai
 	ignore = dirty
 	branch = stable/v3.0.x
-[submodule "kernel"]
-	path = kernel
-	url = https://github.com/raspberrypi/linux
-	ignore = dirty
-	branch = rpi-4.14.y
+	shallow = true
 [submodule "drivers"]
 	path = drivers
 	url = https://github.com/fdellorso/stufa_drivers
