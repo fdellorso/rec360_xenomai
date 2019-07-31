@@ -12,8 +12,8 @@ copy:
 .PHONY: config
 config:
 	@echo "kernel=kernel.img" >> /boot/config.txt
-	# @echo "device_tree=bcm2708-rpi-0-w.dtb" >> /boot/config.txt
-	@echo "device_tree=bcm2708-rpi-b-plus.dtb" >> /boot/config.txt
+	@echo "device_tree=bcm2708-rpi-0-w.dtb" >> /boot/config.txt
+	# @echo "device_tree=bcm2708-rpi-b-plus.dtb" >> /boot/config.txt
 	@echo "dtoverlay=gpio-estop" >> /boot/config.txt
 	@echo "dtoverlay=pwm1" >> /boot/config.txt
 

@@ -58,20 +58,29 @@ kernel_copy2sd:
 	sudo umount $(ROOT_DIR)
 
 
+# Kernel 4.14.85
+# patch_irq:
+# 	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+
+# patch_xenomai: patch_irq
+# 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
+
+
+# Kernel 4.19.LAST
 patch_irq:
-	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+	cd $(LINUX_DIR); git checkout 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85 drivers/irqchip/irq-bcm2835.c drivers/irqchip/irq-bcm2836.c kernel/trace/ftrace.c;
 
 
 patch_xenomai: patch_irq
-	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
+	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.33-arm-2.patch --verbose
 
 
 config: patch_xenomai
 	mkdir -p $(KBUILD_DIR)
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
-	if ! patch -R -p0 -s -f --dry-run patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; then \
-		patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; \
-	fi
+	# if ! patch -R -p0 -s -f --dry-run patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; then \
+	# 	patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; \
+	# fi
 
 
 menuconfig:
