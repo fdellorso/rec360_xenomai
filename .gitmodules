@@ -15,3 +15,7 @@
 	path = xenomai
 	url = https://gitlab.denx.de/Xenomai/xenomai
 	ignore = dirty
+[submodule "formware"]
+	path = firmware
+	url = https://github.com/raspberrypi/firmware
+	ignore = dirty

@@ -51,7 +51,17 @@
 			"scatterlist.h": "c",
 			"softfloat-specialize": "c",
 			"mailbox_controller.h": "c",
-			"mailbox.h": "c"
+			"mailbox.h": "c",
+			"fault.h": "c",
+			"mm.h": "c",
+			"opcodes.h": "c",
+			"traps.h": "c",
+			"exception.h": "c",
+			"bug.h": "c",
+			"kexec.h": "c",
+			"kdebug.h": "c",
+			"map.h": "c",
+			"socket.h": "c"
 		},
 		"files.exclude": {
 			"**/.classpath": true,
