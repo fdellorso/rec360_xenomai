@@ -4,6 +4,8 @@
 # Xenomai v3.0.8	branch stable/v3.0.x	tags v3.0.8; commit fbc3271096c63b21fe895c66ba20b1d10d72ff48
 # tools latest		branch master			commit 5caa7046982f0539cf5380f94da04b31129ed521
 
+# scp xenomai-kernel.tgz pi@<ipaddress>:/tmp
+
 export LINUX_DIR			:= $(PWD)/kernel
 export KBUILD_DIR			:= $(PWD)/kernel-build
 export KERNEL_DIR			:= $(PWD)/kernel-output
