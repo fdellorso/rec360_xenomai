@@ -2,9 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "/home/francesco/ble-uart-peripheral"
 		}
 	],
 	"settings": {
@@ -64,7 +61,27 @@
 			"kexec.h": "c",
 			"kdebug.h": "c",
 			"map.h": "c",
-			"socket.h": "c"
+			"socket.h": "c",
+			"stdio.h": "c",
+			"i2c-dev.h": "c",
+			"i2c.h": "c",
+			"ioctl.h": "c",
+			"mpu6050.h": "c",
+			"*.tcc": "cpp",
+			"fstream": "cpp",
+			"capability.h": "c",
+			"string.h": "c",
+			"list": "c",
+			"mmal.h": "c",
+			"cdev.h": "c",
+			"poll.h": "c",
+			"ble_cdev.h": "c",
+			"device.h": "c",
+			"init.h": "c",
+			"uaccess.h": "c",
+			"pcm512x.h": "c",
+			"iio.h": "c",
+			"semaphore.h": "c"
 		},
 		"files.exclude": {
 			"**/.classpath": true,

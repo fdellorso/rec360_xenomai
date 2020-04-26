@@ -42,7 +42,7 @@ kernel:
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
 	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
-	cp kernel-patch/Makefile $(KERNEL_DIR)/
+	rsync -c kernel-patch/Makefile $(KERNEL_DIR)/
 
 
 kernel_package:
@@ -91,15 +91,15 @@ menuconfig:
 
 prepare_drivers:
 	# PWM Serialiser modified driver
-	cp drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
+	rsync -c drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
 	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 		  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
 	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
 	# DMA modified driver
-	cp drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
+	rsync -c drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
 	# StuFA Drivers & Task Module
-	cp -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	rsync -c -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
@@ -115,7 +115,7 @@ prepare_drivers:
 
 
 overlays:
-	cp drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+	rsync -c drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
 
 xtools:
