@@ -81,7 +81,9 @@
 			"uaccess.h": "c",
 			"pcm512x.h": "c",
 			"iio.h": "c",
-			"semaphore.h": "c"
+			"semaphore.h": "c",
+			"sstream": "c",
+			"regex": "c"
 		},
 		"files.exclude": {
 			"**/.classpath": true,

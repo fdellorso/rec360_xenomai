@@ -98,8 +98,10 @@ prepare_drivers:
 		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
 	# DMA modified driver
 	rsync -c drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
+	# StuFA Defines
+	rsync -c -r drivers/include/stufa $(LINUX_DIR)/include/
 	# StuFA Drivers & Task Module
-	rsync -c -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	rsync -c -r --exclude '_unused' drivers/drivers/stufa $(LINUX_DIR)/drivers/
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
