@@ -1,8 +1,9 @@
-# Linux 4.14.85		branch rpi-4.14.y		commit 802d8776632344a4354d8ef5f142611a4c878570
-# Linux 4.14.110	branch rpi-4.14.y		Not committed on https://github.com/raspberrypi/linux
-# Linux 4.19.33		branch rpi-4.19.y		commit 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85
-# Xenomai v3.0.8	branch stable/v3.0.x	tags v3.0.8; commit fbc3271096c63b21fe895c66ba20b1d10d72ff48
-# tools latest		branch master			commit 5caa7046982f0539cf5380f94da04b31129ed521
+# Linux 4.14.85			branch rpi-4.14.y		commit 802d8776632344a4354d8ef5f142611a4c878570
+# Linux 4.14.110		branch rpi-4.14.y		Not committed on https://github.com/raspberrypi/linux
+# Linux 4.19.33			branch rpi-4.19.y		commit 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85
+# Linux 4.19.60			branch rpi-4.19.y		commit 2b3cf6c405f000c7b25953ab138d4dca0acaf74f
+# Xenomai 3.1 latest	branch master			commit fbc3271096c63b21fe895c66ba20b1d10d72ff48
+# tools latest			branch master			commit 5caa7046982f0539cf5380f94da04b31129ed521
 
 # scp xenomai-kernel.tgz pi@<ipaddress>:/tmp
 
@@ -20,10 +21,13 @@ export CORES				:= -j8
 
 export ARCH					:= arm
 export KERNEL				:= kernel
-export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+# export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
+export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
 
 export BOOT_DIR				?= /media/francesco/boot
 export ROOT_DIR				?= /media/francesco/rootfs
+
+export COPY_OPT				:= rsync -c # cp or rsync -c
 
 
 .PHONY: kernel			kernel_package	\
@@ -42,7 +46,7 @@ kernel:
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
 	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
-	rsync -c kernel-patch/Makefile $(KERNEL_DIR)/
+	$(COPY_OPT) kernel-patch/Makefile $(KERNEL_DIR)/
 
 
 kernel_package:
@@ -68,13 +72,22 @@ kernel_copy2sd:
 # 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
 
 
-# Kernel 4.19.LAST
+# Kernel 4.19.60
+# patch_irq:
+# 	cd $(LINUX_DIR); git checkout 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85 drivers/irqchip/irq-bcm2835.c drivers/irqchip/irq-bcm2836.c kernel/trace/ftrace.c;
+
+
+# patch_xenomai: patch_irq
+# 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.33-arm-2.patch --verbose
+
+
+# Kernel 4.19.127
 patch_irq:
-	cd $(LINUX_DIR); git checkout 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85 drivers/irqchip/irq-bcm2835.c drivers/irqchip/irq-bcm2836.c kernel/trace/ftrace.c;
+	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
 
 patch_xenomai: patch_irq
-	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.33-arm-2.patch --verbose
+	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.128-arm-9.patch --verbose
 
 
 config: patch_xenomai
@@ -91,17 +104,17 @@ menuconfig:
 
 prepare_drivers:
 	# PWM Serialiser modified driver
-	rsync -c drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
+	$(COPY_OPT) drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
 	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 		  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
 	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
 	# DMA modified driver
-	rsync -c drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
+	$(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
 	# StuFA Defines
-	rsync -c -r drivers/include/stufa $(LINUX_DIR)/include/
+	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
 	# StuFA Drivers & Task Module
-	rsync -c -r --exclude '_unused' drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
@@ -117,7 +130,7 @@ prepare_drivers:
 
 
 overlays:
-	rsync -c drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+	$(COPY_OPT) drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
 
 
 xtools:

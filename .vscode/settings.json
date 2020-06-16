@@ -1,7 +1,15 @@
 {
     "files.watcherExclude": {
-        "**/.git/objects/**": true,
-        "**/.git/subtree-cache/**": true,
-        "**/node_modules/**": true
+        // "**/.git/objects/**": true,
+        // "**/.git/subtree-cache/**": true,
+        "**/.git/**": true,
+        "**/node_modules/**": true,
+        "**/kernel/**": true,
+        "**/kernel-build/**": true,
+        "**/kernel-output/**": true,
+        "**/xenomai/**": true,
+        "**/xenomai-build/**": true,
+        "**/xenomai-tools/**": true,
+        "**/tools/**": true
     }
 }
