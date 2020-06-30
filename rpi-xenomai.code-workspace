@@ -83,7 +83,15 @@
 			"iio.h": "c",
 			"semaphore.h": "c",
 			"sstream": "c",
-			"regex": "c"
+			"regex": "c",
+			"chrono": "c",
+			"array": "c",
+			"bitset": "c",
+			"rope": "c",
+			"slist": "c",
+			"initializer_list": "c",
+			"valarray": "c",
+			"utility": "c"
 		},
 		"files.exclude": {
 			"**/.classpath": true,

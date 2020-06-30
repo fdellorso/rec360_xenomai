@@ -90,7 +90,7 @@ patch_xenomai: patch_irq
 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.128-arm-9.patch --verbose
 
 
-config: patch_xenomai
+config:
 	mkdir -p $(KBUILD_DIR)
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
 	# if ! patch -R -p0 -s -f --dry-run patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; then \
@@ -104,13 +104,18 @@ menuconfig:
 
 prepare_drivers:
 	# PWM Serialiser modified driver
-	$(COPY_OPT) drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
-	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
-		  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
-	@sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
-		  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
+	# $(COPY_OPT) drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
+	# @sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+	# 	  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
+	# @sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+	# 	  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
+	$(COPY_OPT) drivers/include/linux/pwm.h $(LINUX_DIR)/include/linux/
+	$(COPY_OPT) drivers/drivers/pwm/* $(LINUX_DIR)/drivers/pwm/
 	# DMA modified driver
-	$(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/bcm2835-dma.c
+	# $(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
+	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; then \
+		patch $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; \
+	fi
 	# StuFA Defines
 	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
 	# StuFA Drivers & Task Module
@@ -130,7 +135,10 @@ prepare_drivers:
 
 
 overlays:
-	$(COPY_OPT) drivers/overlays/* $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+	$(COPY_OPT) drivers/overlays/*.dts $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/arch/arm/boot/dts/overlays/Makefile drivers/overlays/Makefile.K4.19.127.patch; then \
+		patch $(LINUX_DIR)/arch/arm/boot/dts/overlays/Makefile drivers/overlays/Makefile.K4.19.127.patch; \
+	fi
 
 
 xtools:
