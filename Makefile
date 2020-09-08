@@ -112,10 +112,10 @@ prepare_drivers:
 	$(COPY_OPT) drivers/include/linux/pwm.h $(LINUX_DIR)/include/linux/
 	$(COPY_OPT) drivers/drivers/pwm/* $(LINUX_DIR)/drivers/pwm/
 	# DMA modified driver
-	# $(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
-	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; then \
-		patch $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; \
-	fi
+	$(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
+	# if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; then \
+	# 	patch $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; \
+	# fi
 	# StuFA Defines
 	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
 	# StuFA Drivers & Task Module

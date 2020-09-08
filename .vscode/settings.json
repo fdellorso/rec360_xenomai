@@ -12,5 +12,6 @@
         "**/xenomai-tools/**": true,
         "**/tools/**": true
     },
-    "C_Cpp.intelliSenseCacheSize": 1024
+    "C_Cpp.intelliSenseCacheSize": 1024,
+    "editor.formatOnSave": true
 }

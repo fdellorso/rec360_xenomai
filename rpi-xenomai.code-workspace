@@ -91,13 +91,17 @@
 			"slist": "c",
 			"initializer_list": "c",
 			"valarray": "c",
-			"utility": "c"
+			"utility": "c",
+			"algorithm": "c"
 		},
 		"files.exclude": {
 			"**/.classpath": true,
 			"**/.project": true,
 			"**/.settings": true,
 			"**/.factorypath": true
-		}
+		},
+		"editor.formatOnSave": true,
+		"clang-format.language.java.enable": false,
+		"clang-format.language.javascript.enable": false
 	}
 }
