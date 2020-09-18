@@ -4,8 +4,10 @@
 # Linux 4.19.60			branch rpi-4.19.y		commit 2b3cf6c405f000c7b25953ab138d4dca0acaf74f
 # Xenomai 3.1 latest	branch master			commit fbc3271096c63b21fe895c66ba20b1d10d72ff48
 # tools latest			branch master			commit 5caa7046982f0539cf5380f94da04b31129ed521
+# gcc 9.3.0										https://github.com/abhiTronix/raspberry-pi-cross-compilers
 
 # scp xenomai-kernel.tgz pi@<ipaddress>:/tmp
+# scp -r kernel-output/lib/modules/4.19.127+/kernel/drivers/stufa root@192.168.8.70:/lib/modules/4.19.127+/kernel/drivers
 
 export LINUX_DIR			:= $(PWD)/kernel
 export KBUILD_DIR			:= $(PWD)/kernel-build
@@ -22,7 +24,8 @@ export CORES				:= -j8
 export ARCH					:= arm
 export KERNEL				:= kernel
 # export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
-export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
+# export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
+export CROSS_COMPILE		:= arm-linux-gnueabihf-
 
 export BOOT_DIR				?= /media/francesco/boot
 export ROOT_DIR				?= /media/francesco/rootfs
@@ -86,7 +89,7 @@ patch_irq:
 	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
 
-patch_xenomai: patch_irq
+patch_xenomai:
 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.128-arm-9.patch --verbose
 
 

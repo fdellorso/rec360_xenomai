@@ -4,6 +4,7 @@
         // "**/.git/subtree-cache/**": true,
         "**/.git/**": true,
         "**/node_modules/**": true,
+        "**/.hg/**": true,
         "**/kernel/**": true,
         "**/kernel-build/**": true,
         "**/kernel-output/**": true,
@@ -12,6 +13,15 @@
         "**/xenomai-tools/**": true,
         "**/tools/**": true
     },
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
     "C_Cpp.intelliSenseCacheSize": 1024,
-    "editor.formatOnSave": true
+    "[c]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "xaver.clang-format"
+    }
 }

@@ -19,7 +19,7 @@
             "forcedInclude": [
                 "${workspaceFolder}/kernel/include/linux/kconfig.h"
             ],
-            "compilerPath": "${workspaceFolder}/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gcc",
+            "compilerPath": "/home/francesco/cross-pi-gcc-9.3.0-0/bin/arm-linux-gnueabihf-gcc",
             "cStandard": "c89",
             "cppStandard": "c++98",
             "intelliSenseMode": "gcc-arm"
