@@ -30,7 +30,8 @@ export CROSS_COMPILE		:= arm-linux-gnueabihf-
 export BOOT_DIR				?= /media/francesco/boot
 export ROOT_DIR				?= /media/francesco/rootfs
 
-export COPY_OPT				:= rsync -c # cp or rsync -c
+export COPY_EXCLUDE			:= '.clang-format'
+export COPY_OPT				:= rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
 
 
 .PHONY: kernel			kernel_package	\

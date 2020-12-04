@@ -20,8 +20,11 @@
         "**/.factorypath": true
     },
     "C_Cpp.intelliSenseCacheSize": 1024,
-    "[c]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "xaver.clang-format"
-    }
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"editor.tabCompletion": "on",
+	"editor.useTabStops": true
 }
