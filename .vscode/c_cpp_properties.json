@@ -9,8 +9,8 @@
                 "${workspaceFolder}/kernel/arch/arm/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/kernel-build/include",
-                "${workspaceFolder}/xenomai-build/include",
-                "${workspaceFolder}/drivers/include"
+				"${workspaceFolder}/drivers/include",
+				"${workspaceFolder}/xenomai-build/include"
             ],
             "defines": [
                 "__GNUC__",
