@@ -19,7 +19,17 @@ export XTOOLS_DIR			:= ${PWD}/xenomai-tools
 
 export BCM2835LIB_DIR		:= /home/francesco/rpi-xenomai/bcm2835-1.58
 
-export CORES				:= -j8
+# export NPROCS:=1
+# export OS:=$(shell uname -s)
+
+# ifeq($(OS),Linux)
+#   NPROCS:=$(shell grep -c ^processor /proc/cpuinfo)
+# endif
+# ifeq($(OS),Darwin) # Assume Mac OS X
+#   NPROCS:=$(shell system_profiler | awk '/Number Of CPUs/{print $4}{next;}')
+# endif
+
+export CORES				:= -j$(shell nproc)
 
 export ARCH					:= arm
 export KERNEL				:= kernel
