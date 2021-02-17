@@ -37,6 +37,8 @@ export KERNEL				:= kernel
 # export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
 export CROSS_COMPILE		:= arm-linux-gnueabihf-
 
+export CFLAGS				:= '-DSTUFA_DEBUG=1 -DSTUFA_SERIAL=0'
+
 export BOOT_DIR				?= /media/francesco/boot
 export ROOT_DIR				?= /media/francesco/rootfs
 
@@ -56,8 +58,8 @@ export COPY_OPT				:= rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
 
 kernel:
 	mkdir -p $(KERNEL_DIR)
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) zImage modules dtbs
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) zImage modules dtbs
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
 	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
 	$(COPY_OPT) kernel-patch/Makefile $(KERNEL_DIR)/
