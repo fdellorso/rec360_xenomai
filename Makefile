@@ -157,6 +157,47 @@ overlays:
 	fi
 
 
+prepare_sd:
+	# TODO to check
+	CMDLINE=$( cat $(BOOT_DIR)/cmdline.txt )
+	echo $CMDLINE 'dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0' > $(BOOT_DIR)/cmdline.txt
+	# console=ttyS0,115200 console=tty1 root=PARTUUID=e8af6eb2-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet net.ifnames=0
+	# console=ttyS0,115200 console=tty1 root=PARTUUID=2fed7fee-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet net.ifnames=0
+
+	cat << _EOF_ >> $(BOOT_DIR)/config.txt
+
+	kernel=kernel.img
+
+	device_tree=bcm2708-rpi-zero-w.dtb
+
+	# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up
+	gpio=7,8=ip,pu
+
+	# Set GPIO16 (Laser) to be an output set to 0
+	gpio=16=op,dl
+
+	# Set GPIO17,19,26,27 (Light) to be an output set to 0
+	gpio=17,19,26,27=op,dl
+
+	# Set GPIO18 (Stepper) to Alternative 5
+	gpio=18=a5
+
+	# Set GPIO20,21 (Emergency) to be an input and pull-up
+	gpio=20,21=ip,pu
+
+	# Set GPIO23 (Turntable) to be an output set to 1
+	gpio=23=op,dh
+
+	# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up
+	gpio=24=op,dl
+	gpio=25=ip,pu
+
+	dtoverlay=stufa-pwm
+	#dtoverlay=gpio-poweroff,gpiopin=24,active_low=0
+	dtoverlay=i2c-rtc,ds3231
+	_EOF_
+
+
 xtools:
 	cd $(XENOMAI_DIR); ./scripts/bootstrap
 	# --with-core=cobalt --enable-debug=partial
