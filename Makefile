@@ -43,7 +43,10 @@ export BOOT_DIR				?= /media/francesco/boot
 export ROOT_DIR				?= /media/francesco/rootfs
 
 export COPY_EXCLUDE			:= '.clang-format'
-export COPY_OPT				:= rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
+export COPY_OPT				:= @rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
+
+export CMDLINETXT			:= $(shell cat ${BOOT_DIR}/cmdline.txt)
+export CONFIGTXT			:= $(shell cat ${BOOT_DIR}/config.txt)
 
 
 .PHONY: kernel			kernel_package	\
@@ -157,45 +160,39 @@ overlays:
 	fi
 
 
-prepare_sd:
+prepare_cmdlinetxt:
 	# TODO to check
-	CMDLINE=$( cat $(BOOT_DIR)/cmdline.txt )
-	echo $CMDLINE 'dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0' > $(BOOT_DIR)/cmdline.txt
+	if ! grep -q dwc_otg '$(BOOT_DIR)/cmdline.txt'; then \
+		echo -n '$(CMDLINETXT) dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0' > $(BOOT_DIR)/cmdline.txt; \
+	fi
 	# console=ttyS0,115200 console=tty1 root=PARTUUID=e8af6eb2-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet net.ifnames=0
-	# console=ttyS0,115200 console=tty1 root=PARTUUID=2fed7fee-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet net.ifnames=0
 
-	cat << _EOF_ >> $(BOOT_DIR)/config.txt
 
-	kernel=kernel.img
-
-	device_tree=bcm2708-rpi-zero-w.dtb
-
-	# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up
-	gpio=7,8=ip,pu
-
-	# Set GPIO16 (Laser) to be an output set to 0
-	gpio=16=op,dl
-
-	# Set GPIO17,19,26,27 (Light) to be an output set to 0
-	gpio=17,19,26,27=op,dl
-
-	# Set GPIO18 (Stepper) to Alternative 5
-	gpio=18=a5
-
-	# Set GPIO20,21 (Emergency) to be an input and pull-up
-	gpio=20,21=ip,pu
-
-	# Set GPIO23 (Turntable) to be an output set to 1
-	gpio=23=op,dh
-
-	# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up
-	gpio=24=op,dl
-	gpio=25=ip,pu
-
-	dtoverlay=stufa-pwm
-	#dtoverlay=gpio-poweroff,gpiopin=24,active_low=0
-	dtoverlay=i2c-rtc,ds3231
-	_EOF_
+prepare_configtxt:
+	if ! grep -q kernel '$(BOOT_DIR)/config.txt'; then \
+		echo "\n\nkernel=kernel.img" >> $(BOOT_DIR)/config.txt; \
+		echo "\ndevice_tree=bcm2708-rpi-zero-w.dtb" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO6 (Fan) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=6=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=7,8=ip,pu" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO16 (Laser) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=16=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO17,19,26,27 (Light) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=17,19,26,27=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO18 (Stepper) to Alternative 5" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=18=a5" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO20,21 (Emergency) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=20,21=ip,pu" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO23 (Turntable) to be an output set to 1" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=23=op,dh" >> $(BOOT_DIR)/config.txt; \
+		echo "\n# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=24=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=25=ip,pu" >> $(BOOT_DIR)/config.txt; \
+		echo "\ndtoverlay=stufa-pwm" >> $(BOOT_DIR)/config.txt; \
+		echo "#dtoverlay=gpio-poweroff,gpiopin=24,active_low=0" >> $(BOOT_DIR)/config.txt; \
+		echo "dtoverlay=i2c-rtc,ds3231" >> $(BOOT_DIR)/config.txt; \
+	fi
 
 
 xtools:
