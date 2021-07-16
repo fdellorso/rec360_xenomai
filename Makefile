@@ -169,6 +169,7 @@ prepare_cmdlinetxt:
 
 
 prepare_configtxt:
+	# TODO enable dtparam=i2c_vc=on
 	if ! grep -q kernel '$(BOOT_DIR)/config.txt'; then \
 		echo "\n\nkernel=kernel.img" >> $(BOOT_DIR)/config.txt; \
 		echo "\ndevice_tree=bcm2708-rpi-zero-w.dtb" >> $(BOOT_DIR)/config.txt; \
