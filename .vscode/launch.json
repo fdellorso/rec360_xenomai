@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	//
+	// On remote laungh command: gdbserver --multi :3333
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/kernel-build/vmlinux",
+            "targetArchitecture": "ARM",
+            "stopAtEntry": true,
+			"stopAtConnect": true,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "arm-linux-gnueabihf-gdb",
+				"miDebuggerArgs": ""
+            },
+            "setupCommands": [
+                {"text": "-enable-pretty-printing"},
+				{"text": "file '${workspaceFolder}/kernel-build/vmlinux'"},
+				{"text": "set serial baud 115200"},
+                {"text": "target remote /dev/ttyUSB0"},
+				{"text": "lx-symbols"},
+				// {"text": "br '${workspaceFolder}/kernel/kernel/module.c:3446'"},
+				{"text": "delete"},
+				{"text": "br do_init_module"},
+            ],
+            "logging": {
+                "engineLogging": true,
+                "moduleLoad": true,
+                "programOutput": true,
+                "exceptions": true
+            }
+        }
+    ]
+}

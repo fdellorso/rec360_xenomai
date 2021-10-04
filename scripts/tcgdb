@@ -1,0 +1,33 @@
+#! /bin/bash
+
+kgdb_set_pty_cmd=`mktemp --tmpdir kgdb_set_pty_cmd.XXXXXXXXXX` || exit 1
+
+# user defined command
+#
+#   \x5c is '\'
+#
+echo -e																		   \
+   "define tr"                                                                 \
+   "\ndont-repeat"                                                             \
+   "\necho target remote"                                                      \
+   "`cat /tmp/kdmx_ports_gdb`" 		               							   \
+   "\x5cn"                                                                     \
+   "\ntarget remote"                                                           \
+   `cat /tmp/kdmx_ports_gdb`                    							   \
+   "\nend"                                                                     \
+   "\n"                                                                        \
+   "\ndocument tr"                                                             \
+   "\ntarget remote to the kdmx gdb pty"                                       \
+   "\n"                                                                        \
+   "\nThe kdmx gdb pty to be used is: "                                        \
+   `cat /tmp/kdmx_ports_gdb`                    							   \
+   "\nThe kdmx gdb pty was determined at gdb startup.  If the kdmx gdb pty"    \
+   "\nhas changed since then, restart gdb"                                     \
+   "\n"                                                                        \
+   "\nend"                                                                     \
+   > ${kgdb_set_pty_cmd}
+
+echo "arm-linux-gnueabihf-gdb -x ${kgdb_set_pty_cmd} /home/francesco/rpi-xenomai/kernel-build/vmlinux"
+	  arm-linux-gnueabihf-gdb -x ${kgdb_set_pty_cmd} /home/francesco/rpi-xenomai/kernel-build/vmlinux
+
+rm ${kgdb_set_pty_cmd}

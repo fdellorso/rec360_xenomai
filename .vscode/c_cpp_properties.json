@@ -4,13 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+				"${workspaceFolder}/drivers/include",
                 "${workspaceFolder}/kernel/include",
-                "${workspaceFolder}/xenomai/include",
                 "${workspaceFolder}/kernel/arch/arm/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/kernel-build/include",
-				"${workspaceFolder}/drivers/include",
-				"${workspaceFolder}/xenomai-build/include"
+				"${workspaceFolder}/xenomai/include"
+				// "${workspaceFolder}/xenomai-build/include"
             ],
             "defines": [
                 "__GNUC__",

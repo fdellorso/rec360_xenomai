@@ -39,24 +39,22 @@ export CROSS_COMPILE		:= arm-linux-gnueabihf-
 
 export CFLAGS				:= '-DSTUFA_DEBUG=1 -DSTUFA_SERIAL=0'
 
-export BOOT_DIR				?= /media/francesco/boot
-export ROOT_DIR				?= /media/francesco/rootfs
+export BOOT_DIR				?= /mnt/boot
+export ROOT_DIR				?= /mnt/rootfs
 
 export COPY_EXCLUDE			:= '.clang-format'
 export COPY_OPT				:= @rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
 
-export CMDLINETXT			:= $(shell cat ${BOOT_DIR}/cmdline.txt)
-export CONFIGTXT			:= $(shell cat ${BOOT_DIR}/config.txt)
 
-
-.PHONY: kernel			kernel_package	\
-		kernel_copy2sd					\
-		config 			menuconfig		\
-		patch_irq		patch_xenomai 	\
-		prepare_drivers	overlays 		\
-		xtools 			xtools_install	\
-		clean_kernel 	clean_xtools	\
-		reset_kernel 	reset_xtools
+.PHONY: kernel				kernel_package		\
+		kernel_copy2sd							\
+		config 				menuconfig			\
+		patch_irq			patch_xenomai 		\
+		prepare_drivers		overlays	 		\
+		prepare_cmdlinetxt	prepare_configtxt	\
+		xtools 				xtools_install		\
+		clean_kernel 		clean_xtools		\
+		reset_kernel 		reset_xtools
 
 
 kernel:
@@ -74,6 +72,8 @@ kernel_package:
 
 
 kernel_copy2sd:
+	sudo mount /dev/sdb1 $(BOOT_DIR)
+	sudo mount /dev/sdb2 $(ROOT_DIR)
 	sudo cp 	$(KERNEL_DIR)/*.dtb			$(BOOT_DIR)
 	sudo cp -rd $(KERNEL_DIR)/boot/*		$(BOOT_DIR)
 	sudo cp -dr $(KERNEL_DIR)/lib/*			$(ROOT_DIR)/lib/
@@ -128,25 +128,33 @@ prepare_drivers:
 	# 	  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
 	# @sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
 	# 	  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
-	$(COPY_OPT) drivers/include/linux/pwm.h $(LINUX_DIR)/include/linux/
-	$(COPY_OPT) drivers/drivers/pwm/* $(LINUX_DIR)/drivers/pwm/
+	# $(COPY_OPT) drivers/include/linux/pwm.h $(LINUX_DIR)/include/linux/
+	# $(COPY_OPT) drivers/drivers/pwm/* $(LINUX_DIR)/drivers/pwm/
+
 	# DMA modified driver
-	$(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
+	# $(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
 	# if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; then \
 	# 	patch $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; \
 	# fi
+
+	# Enable Xenomai Library to DMA Folder
+	# if ! grep -q xenomai '$(LINUX_DIR)/drivers/dma/Makefile'; then \
+	# 	echo -n "ccflags-y += -I../xenomai/include" >> $(LINUX_DIR)/drivers/dma/Makefile; \
+	# fi
+
 	# StuFA Defines
+	rm -rf $(LINUX_DIR)/include/stufa
 	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
+
 	# StuFA Drivers & Task Module
+	rm -rf $(LINUX_DIR)/drivers/stufa
 	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
 	fi
-	# Enable Xenomai Library to DMA Folder
-	if ! grep -q xenomai '$(LINUX_DIR)/drivers/dma/Makefile'; then \
-		echo -n "ccflags-y += -I../xenomai/include" >> $(LINUX_DIR)/drivers/dma/Makefile; \
-	fi
+
 	# Add StuFA Driver Folder
 	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; then \
 		patch $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; \
@@ -161,7 +169,9 @@ overlays:
 
 
 prepare_cmdlinetxt:
+	export CMDLINETXT := $(shell cat ${BOOT_DIR}/cmdline.txt)
 	# TODO to check
+	# For Debugging purpose add nokaslr
 	if ! grep -q dwc_otg '$(BOOT_DIR)/cmdline.txt'; then \
 		echo -n '$(CMDLINETXT) dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0' > $(BOOT_DIR)/cmdline.txt; \
 	fi
@@ -169,30 +179,48 @@ prepare_cmdlinetxt:
 
 
 prepare_configtxt:
+	export CONFIGTXT := $(shell cat ${BOOT_DIR}/config.txt)
 	# TODO enable dtparam=i2c_vc=on
 	if ! grep -q kernel '$(BOOT_DIR)/config.txt'; then \
 		echo "\n\nkernel=kernel.img" >> $(BOOT_DIR)/config.txt; \
 		echo "\ndevice_tree=bcm2708-rpi-zero-w.dtb" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\ndtoverlay=i2c-rtc,ds3231" >> $(BOOT_DIR)/config.txt; \
+		# echo "dtoverlay=gpio-poweroff,gpiopin=24,active_low=0" >> $(BOOT_DIR)/config.txt; \
+
+		# For Debugging purpose
+		# echo "\n# Disable BT to switch UART from S0 to AMA0" >> $(BOOT_DIR)/config.txt; \
+		# echo "\ndtoverlay=disable-bt" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO6 (Fan) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=6=op,dl" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=7,8=ip,pu" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO16 (Laser) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=16=op,dl" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO17,19,26,27 (Light) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=17,19,26,27=op,dl" >> $(BOOT_DIR)/config.txt; \
-		echo "\n# Set GPIO18 (Stepper) to Alternative 5" >> $(BOOT_DIR)/config.txt; \
-		echo "gpio=18=a5" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO20,21 (Emergency) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=20,21=ip,pu" >> $(BOOT_DIR)/config.txt; \
-		echo "\n# Set GPIO23 (Turntable) to be an output set to 1" >> $(BOOT_DIR)/config.txt; \
-		echo "gpio=23=op,dh" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO18,23 (Sine Stepper) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=18=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=23=op,dl" >> $(BOOT_DIR)/config.txt; \
+
 		echo "\n# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=24=op,dl" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=25=ip,pu" >> $(BOOT_DIR)/config.txt; \
-		echo "\ndtoverlay=stufa-pwm" >> $(BOOT_DIR)/config.txt; \
-		echo "#dtoverlay=gpio-poweroff,gpiopin=24,active_low=0" >> $(BOOT_DIR)/config.txt; \
-		echo "dtoverlay=i2c-rtc,ds3231" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO18 (DMA Motor) to Alternative 5" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=18=a5" >> $(BOOT_DIR)/config.txt; \
+		# echo "\ndtoverlay=stufa-pwm" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO23 (Turntable) to be an output set to 1" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=23=op,dh" >> $(BOOT_DIR)/config.txt; \
 	fi
 
 

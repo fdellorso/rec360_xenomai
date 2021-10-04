@@ -33,7 +33,7 @@ do
     printf -v hdat2 "%02x" "$(( (dat >> 8 ) & 0xFF ))"
     printf -v hdat3 "%02x" "$(( (dat >> 0 ) & 0xFF ))"
 
-    echo -n -e \\x$hcat$hcmd\\x$hdat1\\x$hdat2\\x$hdat3 > /dev/ble_cdev_rx
+    echo -n -e \\x$hcat$hcmd\\x$hdat1\\x$hdat2\\x$hdat3 > /dev/cdev_gui_in
 
     # printf -v hcat "%x" "$cat"
     # printf -v hcmd "%x" "$cmd"
