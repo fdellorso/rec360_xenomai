@@ -113,7 +113,8 @@
 			"stufa_command_defines.h": "c",
 			"wait.h": "c",
 			"cache.h": "c",
-			"current.h": "c"
+			"current.h": "c",
+			"table_sinestepper.h": "c"
 		},
 		"clang-format.language.java.enable": false,
 		"clang-format.language.javascript.enable": false,
