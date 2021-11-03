@@ -37,7 +37,7 @@ export KERNEL				:= kernel
 # export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
 export CROSS_COMPILE		:= arm-linux-gnueabihf-
 
-export CFLAGS				:= '-DSTUFA_DEBUG=1 -DSTUFA_SERIAL=0'
+export CFLAGS				:= '-DSTUFA_DEBUG=1 -DSTUFA_SERIAL=0 -DPLANETARY=0'
 
 export BOOT_DIR				?= /mnt/boot
 export ROOT_DIR				?= /mnt/rootfs
