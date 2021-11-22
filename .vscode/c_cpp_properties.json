@@ -8,8 +8,8 @@
                 "${workspaceFolder}/kernel/include",
                 "${workspaceFolder}/kernel/arch/arm/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
-                "${workspaceFolder}/kernel-build/include",
-				"${workspaceFolder}/xenomai/include"
+                "${workspaceFolder}/kernel-build/include"
+				// "${workspaceFolder}/xenomai/include"
 				// "${workspaceFolder}/xenomai-build/include"
             ],
             "defines": [

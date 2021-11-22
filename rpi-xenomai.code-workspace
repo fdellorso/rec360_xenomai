@@ -5,6 +5,48 @@
 		}
 	],
 	"settings": {
+		"todo-tree.general.tags": [
+			"BUG",
+			"FIXME",
+			"TODO",
+			"NOTE"
+		],
+		"todo-tree.highlights.customHighlight": {
+			"BUG": {
+				"icon": "bug",
+				"iconColour": "darkred",
+				"type": "text",
+				"background": "darkred",
+				"foreground": "black"
+			},
+			"FIXME": {
+				"icon": "tools",
+				"iconColour": "gold",
+				"type": "text",
+				"background": "gold",
+				"foreground": "black"
+			},
+			"TODO": {
+				"icon": "checklist",
+				"iconColour": "forestgreen",
+				"type": "text",
+				"background": "forestgreen",
+				"foreground": "black",
+			},
+			"NOTE": {
+				"icon": "note",
+				"iconColour": "palegoldenrod",
+				"type": "text",
+				"background": "palegoldenrod",
+				
+			}
+		},
+		"editor.fontFamily": "'Noto Mono for Powerline'",
+		"editor.suggestSelection": "first",
+		"explorer.confirmDelete": false,
+		"explorer.confirmDragAndDrop": false,
+		"explorer.incrementalNaming": "smart",
+		"printcode.fontSize": 8,
 		"files.associations": {
 			"fs.h": "c",
 			"driver.h": "c",
@@ -114,7 +156,11 @@
 			"wait.h": "c",
 			"cache.h": "c",
 			"current.h": "c",
-			"table_sinestepper.h": "c"
+			"table_sinestepper.h": "c",
+			"gpio_estop.h": "c",
+			"ticket.h": "c",
+			"gpio_pbutton.h": "c",
+			"spinlock.h": "c"
 		},
 		"clang-format.language.java.enable": false,
 		"clang-format.language.javascript.enable": false,

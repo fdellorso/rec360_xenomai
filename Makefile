@@ -33,11 +33,7 @@ export CORES				:= -j$(shell nproc)
 
 export ARCH					:= arm
 export KERNEL				:= kernel
-# export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-
-# export CROSS_COMPILE		:= $(PWD)/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-7.5.0-2019.12-x86_64/bin/arm-linux-gnueabihf-
 export CROSS_COMPILE		:= arm-linux-gnueabihf-
-
-export CFLAGS				:= '-DSTUFA_DEBUG=1 -DSTUFA_SERIAL=0 -DPLANETARY=0'
 
 export BOOT_DIR				?= /mnt/boot
 export ROOT_DIR				?= /mnt/rootfs
@@ -59,8 +55,10 @@ export COPY_OPT				:= @rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
 
 kernel:
 	mkdir -p $(KERNEL_DIR)
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) zImage modules dtbs
-	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+	# make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) zImage modules dtbs
+	# make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) zImage modules dtbs
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
 	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
 	$(COPY_OPT) kernel-patch/Makefile $(KERNEL_DIR)/
@@ -83,28 +81,22 @@ kernel_copy2sd:
 	sudo umount $(ROOT_DIR)
 
 
-# Kernel 4.14.85
-# patch_irq:
-# 	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+patch_irq:
+	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
 
-# patch_xenomai: patch_irq
-# 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
-
-
-# Kernel 4.19.60
 # patch_irq:
 # 	cd $(LINUX_DIR); git checkout 4b3a3ab00fa7a951eb1d7568c71855e75fd5af85 drivers/irqchip/irq-bcm2835.c drivers/irqchip/irq-bcm2836.c kernel/trace/ftrace.c;
 
 
-# patch_xenomai: patch_irq
+# Kernel 4.14.85
+# patch_xenomai:
+# 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.14.85-arm-6.patch --verbose
+
+# Kernel 4.19.60
+# patch_xenomai:
 # 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.33-arm-2.patch --verbose
 
-
 # Kernel 4.19.127
-patch_irq:
-	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
-
-
 patch_xenomai:
 	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.128-arm-9.patch --verbose
 
@@ -149,6 +141,7 @@ prepare_drivers:
 	# StuFA Drivers & Task Module
 	rm -rf $(LINUX_DIR)/drivers/stufa
 	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	for d in $(LINUX_DIR)/drivers/stufa/*; do [ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; done
 	
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
