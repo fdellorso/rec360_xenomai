@@ -26,5 +26,6 @@
     "editor.insertSpaces": false,
 	"editor.tabSize": 4,
 	"editor.tabCompletion": "on",
-	"editor.useTabStops": true
+	"editor.useTabStops": true,
+	"cmake.configureOnOpen": false
 }

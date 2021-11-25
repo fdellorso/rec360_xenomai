@@ -134,15 +134,6 @@ prepare_drivers:
 	# 	echo -n "ccflags-y += -I../xenomai/include" >> $(LINUX_DIR)/drivers/dma/Makefile; \
 	# fi
 
-	# StuFA Defines
-	rm -rf $(LINUX_DIR)/include/stufa
-	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
-
-	# StuFA Drivers & Task Module
-	rm -rf $(LINUX_DIR)/drivers/stufa
-	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
-	for d in $(LINUX_DIR)/drivers/stufa/*; do [ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; done
-	
 	# Enable StuFA Drivers to compile
 	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
 		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
@@ -152,6 +143,15 @@ prepare_drivers:
 	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; then \
 		patch $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; \
 	fi
+
+	# StuFA Defines
+	rm -rf $(LINUX_DIR)/include/stufa
+	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
+
+	# StuFA Drivers & Task Module
+	rm -rf $(LINUX_DIR)/drivers/stufa
+	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	for d in $(LINUX_DIR)/drivers/stufa/*; do [ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; done
 
 
 overlays:

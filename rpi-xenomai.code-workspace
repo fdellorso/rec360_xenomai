@@ -41,7 +41,7 @@
 				
 			}
 		},
-		"editor.fontFamily": "'Noto Mono for Powerline'",
+		// "editor.fontFamily": "'Noto Mono for Powerline'",
 		"editor.suggestSelection": "first",
 		"explorer.confirmDelete": false,
 		"explorer.confirmDragAndDrop": false,
