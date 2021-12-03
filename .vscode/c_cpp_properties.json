@@ -15,14 +15,14 @@
             "defines": [
                 "__GNUC__",
 				"__KERNEL__",
-				"STUFA_DEBUG",
-				"STUFA_SERIAL"
+				"STUFA_DEBUG=1",
+				"STUFA_SERIAL=0",
+				"PLANETARY=1"
             ],
             "forcedInclude": [
                 "${workspaceFolder}/kernel/include/linux/kconfig.h"
             ],
-            // "compilerPath": "/home/francesco/Develop/cross-pi-gcc-8.3.0-0/bin/arm-linux-gnueabihf-gcc",
-			"compilerPath": "/mnt/d/Develop/cross-pi-gcc-8.3.0-0/bin/arm-linux-gnueabihf-gcc",
+            "compilerPath": "/home/francesco/Develop/cross-pi-gcc-8.3.0-0/bin/arm-linux-gnueabihf-gcc",
 			"cStandard": "c89",
             "cppStandard": "c++98",
             "intelliSenseMode": "gcc-arm"

@@ -70,8 +70,8 @@ kernel_package:
 
 
 kernel_copy2sd:
-	sudo mount /dev/sdb1 $(BOOT_DIR)
-	sudo mount /dev/sdb2 $(ROOT_DIR)
+	sudo mount /dev/sdd1 $(BOOT_DIR)
+	sudo mount /dev/sdd2 $(ROOT_DIR)
 	sudo cp 	$(KERNEL_DIR)/*.dtb			$(BOOT_DIR)
 	sudo cp -rd $(KERNEL_DIR)/boot/*		$(BOOT_DIR)
 	sudo cp -dr $(KERNEL_DIR)/lib/*			$(ROOT_DIR)/lib/
@@ -151,7 +151,10 @@ prepare_drivers:
 	# StuFA Drivers & Task Module
 	rm -rf $(LINUX_DIR)/drivers/stufa
 	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
-	for d in $(LINUX_DIR)/drivers/stufa/*; do [ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; done
+	for d in $(LINUX_DIR)/drivers/stufa/*; do \
+		if [ $$d != $(LINUX_DIR)/drivers/stufa/ticket ]]; then \
+			[ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; fi \
+	done
 
 
 overlays:
@@ -185,17 +188,11 @@ prepare_configtxt:
 		# echo "\n# Disable BT to switch UART from S0 to AMA0" >> $(BOOT_DIR)/config.txt; \
 		# echo "\ndtoverlay=disable-bt" >> $(BOOT_DIR)/config.txt; \
 
-		echo "\n# Set GPIO6 (Fan) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
-		echo "gpio=6=op,dl" >> $(BOOT_DIR)/config.txt; \
-
 		echo "\n# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=7,8=ip,pu" >> $(BOOT_DIR)/config.txt; \
 
 		echo "\n# Set GPIO16 (Laser) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
-		echo "gpio=16=op,dl" >> $(BOOT_DIR)/config.txt; \
-
-		echo "\n# Set GPIO17,19,26,27 (Light) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
-		echo "gpio=17,19,26,27=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=16=op,dh" >> $(BOOT_DIR)/config.txt; \
 
 		echo "\n# Set GPIO20,21 (Emergency) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=20,21=ip,pu" >> $(BOOT_DIR)/config.txt; \
@@ -208,12 +205,18 @@ prepare_configtxt:
 		echo "gpio=24=op,dl" >> $(BOOT_DIR)/config.txt; \
 		echo "gpio=25=ip,pu" >> $(BOOT_DIR)/config.txt; \
 
+		# echo "\n# Set GPIO6 (Fan) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=6=op,dl" >> $(BOOT_DIR)/config.txt; \
+
 		# echo "\n# Set GPIO18 (DMA Motor) to Alternative 5" >> $(BOOT_DIR)/config.txt; \
 		# echo "gpio=18=a5" >> $(BOOT_DIR)/config.txt; \
 		# echo "\ndtoverlay=stufa-pwm" >> $(BOOT_DIR)/config.txt; \
 
 		# echo "\n# Set GPIO23 (Turntable) to be an output set to 1" >> $(BOOT_DIR)/config.txt; \
 		# echo "gpio=23=op,dh" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO17,19,26,27 (Light) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=17,19,26,27=op,dh" >> $(BOOT_DIR)/config.txt; \
 	fi
 
 

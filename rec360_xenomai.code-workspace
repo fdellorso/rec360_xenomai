@@ -42,6 +42,7 @@
 			}
 		},
 		// "editor.fontFamily": "'Noto Mono for Powerline'",
+		"terminal.integrated.fontFamily": "",
 		"editor.suggestSelection": "first",
 		"explorer.confirmDelete": false,
 		"explorer.confirmDragAndDrop": false,
@@ -160,7 +161,12 @@
 			"gpio_estop.h": "c",
 			"ticket.h": "c",
 			"gpio_pbutton.h": "c",
-			"spinlock.h": "c"
+			"spinlock.h": "c",
+			"kthread.h": "c",
+			"err.h": "c",
+			"cgroup.h": "c",
+			"stufa_log.h": "c",
+			"kgdb.h": "c"
 		},
 		"clang-format.language.java.enable": false,
 		"clang-format.language.javascript.enable": false,

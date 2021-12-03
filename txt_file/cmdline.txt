@@ -1,0 +1,16 @@
+root=PARTUUID=0e2887fb-02
+rootfstype=ext4
+rootwait
+fsck.repair=yes
+
+net.ifnames=0
+
+logo.nologo
+quiet
+
+console=ttyS0,115200
+console=tty1
+
+#elevator=deadline
+
+dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0
