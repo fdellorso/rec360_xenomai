@@ -55,8 +55,6 @@ export COPY_OPT				:= @rsync -ac --exclude=$(COPY_EXCLUDE) # cp or rsync -c
 
 kernel:
 	mkdir -p $(KERNEL_DIR)
-	# make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) zImage modules dtbs
-	# make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) CFLAGS_MODULE=$(CFLAGS) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) zImage modules dtbs
 	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
 	mkdir -p $(KERNEL_DIR)/boot
@@ -151,6 +149,7 @@ prepare_drivers:
 	# StuFA Drivers & Task Module
 	rm -rf $(LINUX_DIR)/drivers/stufa
 	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	# Copy Ticket src to each driver
 	for d in $(LINUX_DIR)/drivers/stufa/*; do \
 		if [ $$d != $(LINUX_DIR)/drivers/stufa/ticket ]]; then \
 			[ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; fi \
