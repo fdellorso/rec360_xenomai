@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Copy Test tool to Target",
+			"command": "rsync",
+			"args": [
+				"-acP",
+				"${workspaceFolder}/test_tool/cmd_test.sh",
+				"${workspaceFolder}/test_tool/debug.sh",
+				// "dietpi@rec360-b36a8af4.local:/home/dietpi/rec360/test"
+				"dietpi@dietpi.local:/home/dietpi/rec360/test"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		}
+	]
+}
