@@ -3,25 +3,26 @@ dtparam=i2c_vc=on
 kernel=kernel.img
 device_tree=bcm2708-rpi-zero-w.dtb
 
-# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up
-gpio=7,8=ip,pu
+# Set GPIO5 (Gyro_Int) to be an input and pull-up
+gpio=5=ip,pu
+
+# Set GPIO13 (Hall_Int) to be an input and pull-up
+gpio=13=ip,pu
 
 # Set GPIO16 (Laser) to be an output set to 1
 gpio=16=op,dh
 
-# Set GPIO17,19,26,27 (Light) to be an output set to 1
-gpio=17,19,26,27=op,dh
+# Set (Light) always on
 
-# Set GPIO20,21 (Emergency) to be an input and pull-up
-gpio=20,21=ip,pu
+# Set GPIO19 (Emergency) to be an input and pull-up
+gpio=19=ip,pu
 
-# Set GPIO18,23 (Sine Stepper) to be an output set to 0
+# Set GPIO17,18 (Sine Stepper DIR & STEP) to be an output set to 0
+gpio=17=op,dl
 gpio=18=op,dl
-gpio=23=op,dl
 
-# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up
-gpio=24=op,dl
-gpio=25=ip,pu
+# Set GPIO6 (Button HW) to be an input and pull-up
+gpio=6=ip,pu
 
-# Set GPIO28,29 to I2C0, Alternative 0
-gpio=28,29=a0
+# Set GPIO20,21 (Button LED) to be an output set to 0
+gpio=20,21=op,dl

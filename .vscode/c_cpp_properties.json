@@ -17,7 +17,7 @@
 				"__KERNEL__",
 				"STUFA_DEBUG=1",
 				"STUFA_SERIAL=0",
-				"PLANETARY=1"
+				"PLANETARY=0"
             ],
             "forcedInclude": [
                 "${workspaceFolder}/kernel/include/linux/kconfig.h"
