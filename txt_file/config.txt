@@ -9,8 +9,8 @@ gpio=5=ip,pu
 # Set GPIO13 (Hall_Int) to be an input and pull-up
 gpio=13=ip,pu
 
-# Set GPIO16 (Laser) to be an output set to 1
-gpio=16=op,dh
+# Set GPIO16 (nSleep & nLaser) to be an output set to 0
+gpio=16=op,dl
 
 # Set (Light) always on
 
@@ -23,6 +23,9 @@ gpio=18=op,dl
 
 # Set GPIO6 (Button HW) to be an input and pull-up
 gpio=6=ip,pu
+
+# Set GPIO12 (Button SW) to be an output set to 0
+gpio=12=op,dl
 
 # Set GPIO20,21 (Button LED) to be an output set to 0
 gpio=20,21=op,dl
