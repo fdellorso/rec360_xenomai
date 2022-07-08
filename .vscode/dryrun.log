@@ -1,0 +1,11 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/develop/Develop/rec360_xenomai'
+ 
+mkdir -p /home/develop/Develop/rec360_xenomai/kernel-output
+make -C /home/develop/Develop/rec360_xenomai/kernel ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=/home/develop/Develop/rec360_xenomai/kernel-build -j8 zImage modules dtbs
+make -C /home/develop/Develop/rec360_xenomai/kernel ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=/home/develop/Develop/rec360_xenomai/kernel-build -j8 modules_install dtbs_install INSTALL_MOD_PATH=/home/develop/Develop/rec360_xenomai/kernel-output INSTALL_DTBS_PATH=/home/develop/Develop/rec360_xenomai/kernel-output
+mkdir -p /home/develop/Develop/rec360_xenomai/kernel-output/boot
+cd /home/develop/Develop/rec360_xenomai/kernel; ./scripts/mkknlimg /home/develop/Develop/rec360_xenomai/kernel-build/arch/arm/boot/zImage /home/develop/Develop/rec360_xenomai/kernel-output/boot/kernel.img
+rsync -ac --exclude='.clang-format'  kernel-patch/Makefile /home/develop/Develop/rec360_xenomai/kernel-output/
+make: Leaving directory '/home/develop/Develop/rec360_xenomai'
+ 

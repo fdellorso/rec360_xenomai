@@ -4,28 +4,27 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-				"${workspaceFolder}/drivers/include",
+                "${workspaceFolder}/drivers/include",
                 "${workspaceFolder}/kernel/include",
                 "${workspaceFolder}/kernel/arch/arm/include",
                 "${workspaceFolder}/kernel/arch/arm/xenomai/include",
                 "${workspaceFolder}/kernel-build/include"
-				// "${workspaceFolder}/xenomai/include"
-				// "${workspaceFolder}/xenomai-build/include"
             ],
             "defines": [
                 "__GNUC__",
-				"__KERNEL__",
-				"STUFA_DEBUG=1",
-				"STUFA_SERIAL=0",
-				"PLANETARY=0"
+                "__KERNEL__",
+                "STUFA_DEBUG=1",
+                "STUFA_SERIAL=0",
+                "PLANETARY=0"
             ],
             "forcedInclude": [
                 "${workspaceFolder}/kernel/include/linux/kconfig.h"
             ],
-            "compilerPath": "/home/francesco/Develop/cross-pi-gcc-8.3.0-0/bin/arm-linux-gnueabihf-gcc",
-			"cStandard": "c89",
+            "compilerPath": "/home/develop/Develop/cross-pi-gcc-8.3.0-0/bin/arm-linux-gnueabihf-gcc",
+            "cStandard": "c89",
             "cppStandard": "c++98",
-            "intelliSenseMode": "gcc-arm"
+            "intelliSenseMode": "gcc-arm",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

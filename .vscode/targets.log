@@ -1,0 +1,619 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Fri Jul  8 10:48:23 2022
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = ubuntu
+# default
+.SHELLFLAGS := -c
+# environment
+XDG_SESSION_CLASS = user
+# environment
+SNAP_COMMON = /var/snap/code/common
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/develop/Develop/rec360_xenomai
+# makefile
+SHELL = /bin/sh
+# environment
+SNAP_DATA = /var/snap/code/100
+# makefile (from 'Makefile', line 15)
+KPACKAGE_DIR := /home/develop/Develop/rec360_xenomai/kernel-package
+# environment
+VTE_VERSION = 6003
+# makefile (from 'Makefile', line 38)
+BOOT_DIR = /mnt/boot
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+JOURNAL_STREAM = 8:51357
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# environment
+SNAP_INSTANCE_NAME = code
+# environment
+SNAP_ARCH = amd64
+# makefile (from 'Makefile', line 35)
+KERNEL := kernel
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+IM_CONFIG_PHASE = 1
+# environment
+USERNAME = develop
+# environment
+MAKELEVEL := 0
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# environment
+MANAGERPID = 1566
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+LC_NAME = de_CH.UTF-8
+# environment
+VSCODE_CWD = /home/develop/Develop/rec360_xenomai
+# environment
+GSETTINGS_SCHEMA_DIR = /snap/code/100/usr/share/glib-2.0/schemas
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/develop/Develop/balena-cli:/home/develop/Develop/cross-pi-gcc-8.3.0-0/bin
+# makefile (from 'Makefile', line 16)
+XENOMAI_DIR := /home/develop/Develop/rec360_xenomai/xenomai
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+SESSION_MANAGER = local/develop:@/tmp/.ICE-unix/1790,unix/develop:/tmp/.ICE-unix/1790
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GDK_PIXBUF_MODULE_FILE = /home/develop/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+# environment
+SNAP = /snap/code/100
+# environment
+UBUNTU_MENUPROXY = 1
+# environment
+SNAP_VERSION = 92d25e35
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+DISABLE_WAYLAND = 1
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = 1a444d4b2f3a466092e470c509671a2f
+# environment
+GDK_PIXBUF_MODULEDIR = /snap/code/100/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# environment
+SNAP_INSTANCE_KEY = 
+# environment
+PWD = /home/develop/Develop/rec360_xenomai
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1747
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge:appmenu-gtk-module:appmenu-gtk-module
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/develop
+# makefile (from 'Makefile', line 20)
+BCM2835LIB_DIR := /home/francesco/rpi-xenomai/bcm2835-1.58
+# makefile (from 'Makefile', line 42)
+COPY_OPT := @rsync -ac --exclude='.clang-format' 
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# makefile (from 'Makefile', line 32)
+CORES := -j8
+# environment
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /home/develop/.config/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+# environment
+LOGNAME = develop
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
+# environment
+SNAP_CONTEXT = vtGPhy3Q7JvKPCe4TWYk1wQNOkXyR_pxKJ2Mr6D8F8O5nivlBVSD
+# automatic
++F = $(notdir $+)
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+SNAP_USER_COMMON = /home/develop/snap/code/common
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile (from 'Makefile', line 12)
+LINUX_DIR := /home/develop/Develop/rec360_xenomai/kernel
+# environment
+LC_TIME = de_CH.UTF-8
+# environment
+SNAP_REAL_HOME = /home/develop
+# environment
+COLORTERM = truecolor
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SNAP_USER_DATA = /home/develop/snap/code/100
+# environment
+SHLVL = 1
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = develop
+# environment
+SNAP_REVISION = 100
+# environment
+LC_MONETARY = de_CH.UTF-8
+# makefile
+.DEFAULT_GOAL := kernel
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+LC_TELEPHONE = de_CH.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+OLDPWD = /home/develop/Develop
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-b3bec720-1.69.0-main.sock
+# makefile (from 'Makefile', line 17)
+XBUILD_DIR := /home/develop/Develop/rec360_xenomai/xenomai-build
+# makefile (from 'Makefile', line 34)
+ARCH := arm
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
+# makefile (from 'Makefile', line 18)
+XTOOLS_DIR := /home/develop/Develop/rec360_xenomai/xenomai-tools
+# environment
+LC_PAPER = de_CH.UTF-8
+# environment
+NO_AT_BRIDGE = 1
+# environment
+LC_IDENTIFICATION = de_CH.UTF-8
+# environment
+QT_ACCESSIBILITY = 1
+# makefile (from 'Makefile', line 36)
+CROSS_COMPILE := arm-linux-gnueabihf-
+# 'override' directive
+.SHELLSTATUS := 0
+# default
+MAKEFILES := 
+# environment
+SNAP_COOKIE = vtGPhy3Q7JvKPCe4TWYk1wQNOkXyR_pxKJ2Mr6D8F8O5nivlBVSD
+# environment
+LC_NUMERIC = de_CH.UTF-8
+# automatic
+<F = $(notdir $<)
+# environment
+LC_MEASUREMENT = de_CH.UTF-8
+# environment
+SNAP_NAME = code
+# environment
+LC_ALL = C
+# makefile (from 'Makefile', line 41)
+COPY_EXCLUDE := '.clang-format'
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/623db843_938d_42ea_a14a_9ebeb27a252b
+# automatic
+^F = $(notdir $^)
+# makefile (from 'Makefile', line 13)
+KBUILD_DIR := /home/develop/Develop/rec360_xenomai/kernel-build
+# environment
+GNOME_TERMINAL_SERVICE = :1.96
+# makefile (from 'Makefile', line 14)
+KERNEL_DIR := /home/develop/Develop/rec360_xenomai/kernel-output
+# default
+SUFFIXES := 
+# environment
+SNAP_REEXEC = 
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+WINDOWPATH = 2
+# makefile (from 'Makefile', line 39)
+ROOT_DIR = /mnt/rootfs
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# default
+.RECIPEPREFIX := 
+# environment
+LC_ADDRESS = de_CH.UTF-8
+# environment
+LANG = C
+# environment
+TERM = xterm-256color
+ 
+# environment
+VSCODE_PID = 3326
+# variable set hash-table stats:
+# Load=145/1024=14%, Rehash=0, Collisions=24/183=13%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2069, inode 23726749): 20 files, no impossibilities.
+
+# 20 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+config:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 103):
+	mkdir -p $(KBUILD_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) bcmrpi_defconfig
+	# if ! patch -R -p0 -s -f --dry-run patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; then \
+	# 	patch $(KBUILD_DIR)/.config kernel-patch/defconfig.patch; \
+	# fi
+
+reset_xtools:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 255):
+	cd $(XENOMAI_DIR); git reset --hard; git clean -fxd :/;
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+.PHONY: kernel kernel_package kernel_copy2sd config menuconfig patch_irq patch_xenomai prepare_drivers overlays prepare_cmdlinetxt prepare_configtxt xtools xtools_install clean_kernel clean_xtools reset_kernel reset_xtools
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean_xtools:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 246):
+	rm -rf $(XTOOLS_DIR)
+	rm -rf $(XBUILD_DIR)
+
+xtools_install:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 235):
+	mkdir -p $(XTOOLS_DIR)
+	make -C $(XBUILD_DIR) $(CORES) install DESTDIR=$(XTOOLS_DIR)
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 11:17:49.342952149
+#  File has been updated.
+#  Successfully updated.
+
+kernel:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 57):
+	mkdir -p $(KERNEL_DIR)
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) zImage modules dtbs
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) modules_install dtbs_install INSTALL_MOD_PATH=$(KERNEL_DIR) INSTALL_DTBS_PATH=$(KERNEL_DIR)
+	mkdir -p $(KERNEL_DIR)/boot
+	cd $(LINUX_DIR); ./scripts/mkknlimg $(KBUILD_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/boot/$(KERNEL).img
+	$(COPY_OPT) kernel-patch/Makefile $(KERNEL_DIR)/
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+prepare_configtxt:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 177):
+	export CONFIGTXT := $(shell cat ${BOOT_DIR}/config.txt)
+	# TODO enable dtparam=i2c_vc=on
+	if ! grep -q kernel '$(BOOT_DIR)/config.txt'; then \
+		echo "\n\nkernel=kernel.img" >> $(BOOT_DIR)/config.txt; \
+		echo "\ndevice_tree=bcm2708-rpi-zero-w.dtb" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\ndtoverlay=i2c-rtc,ds3231" >> $(BOOT_DIR)/config.txt; \
+		# echo "dtoverlay=gpio-poweroff,gpiopin=24,active_low=0" >> $(BOOT_DIR)/config.txt; \
+
+		# For Debugging purpose
+		# echo "\n# Disable BT to switch UART from S0 to AMA0" >> $(BOOT_DIR)/config.txt; \
+		# echo "\ndtoverlay=disable-bt" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO7,8 (Hall_Int & Gyro_Int) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=7,8=ip,pu" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO16 (Laser) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=16=op,dh" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO20,21 (Emergency) to be an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=20,21=ip,pu" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO18,23 (Sine Stepper) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=18=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=23=op,dl" >> $(BOOT_DIR)/config.txt; \
+
+		echo "\n# Set GPIO24,25 (Button) to be respectively an output set to 0, and an input and pull-up" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=24=op,dl" >> $(BOOT_DIR)/config.txt; \
+		echo "gpio=25=ip,pu" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO6 (Fan) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=6=op,dl" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO18 (DMA Motor) to Alternative 5" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=18=a5" >> $(BOOT_DIR)/config.txt; \
+		# echo "\ndtoverlay=stufa-pwm" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO23 (Turntable) to be an output set to 1" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=23=op,dh" >> $(BOOT_DIR)/config.txt; \
+
+		# echo "\n# Set GPIO17,19,26,27 (Light) to be an output set to 0" >> $(BOOT_DIR)/config.txt; \
+		# echo "gpio=17,19,26,27=op,dh" >> $(BOOT_DIR)/config.txt; \
+	fi
+
+patch_irq:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 83):
+	cp kernel-patch/irq-bcm283* $(LINUX_DIR)/drivers/irqchip/
+
+patch_xenomai:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 99):
+	$(XENOMAI_DIR)/scripts/prepare-kernel.sh --linux=$(LINUX_DIR) --arch=$(ARCH) --ipipe=./xenomai-patch/ipipe-core-4.19.128-arm-9.patch --verbose
+
+prepare_cmdlinetxt:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 167):
+	export CMDLINETXT := $(shell cat ${BOOT_DIR}/cmdline.txt)
+	# TODO to check
+	# For Debugging purpose add nokaslr
+	if ! grep -q dwc_otg '$(BOOT_DIR)/cmdline.txt'; then \
+		echo -n '$(CMDLINETXT) dwc_otg.fiq_enable=0 dwc_otg.fiq_fsm_enable=0 dwc_otg.nak_holdoff=0' > $(BOOT_DIR)/cmdline.txt; \
+	fi
+	# console=ttyS0,115200 console=tty1 root=PARTUUID=e8af6eb2-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet net.ifnames=0
+
+prepare_drivers:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 115):
+	# PWM Serialiser modified driver
+	# $(COPY_OPT) drivers/include/linux/pwm_dev.h $(LINUX_DIR)/include/linux/pwm.h
+	# @sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+	# 	  drivers/drivers/pwm/core.c > $(LINUX_DIR)/drivers/pwm/core.c
+	# @sed 's+#include <linux/pwm_dev.h>+#include <linux/pwm.h>+g' \
+	# 	  drivers/drivers/pwm/pwm-bcm2835.c > $(LINUX_DIR)/drivers/pwm/pwm-bcm2835.c
+	# $(COPY_OPT) drivers/include/linux/pwm.h $(LINUX_DIR)/include/linux/
+	# $(COPY_OPT) drivers/drivers/pwm/* $(LINUX_DIR)/drivers/pwm/
+	# DMA modified driver
+	# $(COPY_OPT) drivers/drivers/dma/bcm2835-dma.c $(LINUX_DIR)/drivers/dma/
+	# if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; then \
+	# 	patch $(LINUX_DIR)/drivers/dma/bcm2835-dma.c drivers/drivers/dma/bcm2835-dma.K4.19.127.patch; \
+	# fi
+	# Enable Xenomai Library to DMA Folder
+	# if ! grep -q xenomai '$(LINUX_DIR)/drivers/dma/Makefile'; then \
+	# 	echo -n "ccflags-y += -I../xenomai/include" >> $(LINUX_DIR)/drivers/dma/Makefile; \
+	# fi
+	# Enable StuFA Drivers to compile
+	if ! grep -q stufa '$(LINUX_DIR)/drivers/Makefile'; then \
+		echo -n "obj-y += stufa/" >> $(LINUX_DIR)/drivers/Makefile; \
+	fi
+	# Add StuFA Driver Folder
+	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; then \
+		patch $(LINUX_DIR)/drivers/Kconfig drivers/drivers/Kconfig.patch; \
+	fi
+	# StuFA Defines
+	rm -rf $(LINUX_DIR)/include/stufa
+	$(COPY_OPT) -r drivers/include/stufa $(LINUX_DIR)/include/
+	# StuFA Drivers & Task Module
+	rm -rf $(LINUX_DIR)/drivers/stufa
+	$(COPY_OPT) -r drivers/drivers/stufa $(LINUX_DIR)/drivers/
+	# Copy Ticket src to each driver
+	for d in $(LINUX_DIR)/drivers/stufa/*; do \
+		if [ $$d != $(LINUX_DIR)/drivers/stufa/ticket ]]; then \
+			[ -d $$d ] && cp $(LINUX_DIR)/drivers/stufa/ticket/ticket.c $$d; fi \
+	done
+
+kernel_copy2sd:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 71):
+	sudo mount /dev/sdd1 $(BOOT_DIR)
+	sudo mount /dev/sdd2 $(ROOT_DIR)
+	sudo cp 	$(KERNEL_DIR)/*.dtb			$(BOOT_DIR)
+	sudo cp -rd $(KERNEL_DIR)/boot/*		$(BOOT_DIR)
+	sudo cp -dr $(KERNEL_DIR)/lib/*			$(ROOT_DIR)/lib/
+	sudo cp -d	$(KERNEL_DIR)/overlays/*	$(BOOT_DIR)/overlays/
+	sudo cp -d	$(KERNEL_DIR)/bcm*			$(BOOT_DIR)
+	sudo umount	$(BOOT_DIR)
+	sudo umount $(ROOT_DIR)
+
+overlays:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 160):
+	$(COPY_OPT) drivers/overlays/*.dts $(LINUX_DIR)/arch/arm/boot/dts/overlays/
+	if ! patch -R -p0 -s -f --dry-run $(LINUX_DIR)/arch/arm/boot/dts/overlays/Makefile drivers/overlays/Makefile.K4.19.127.patch; then \
+		patch $(LINUX_DIR)/arch/arm/boot/dts/overlays/Makefile drivers/overlays/Makefile.K4.19.127.patch; \
+	fi
+
+reset_kernel:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 251):
+	cd $(LINUX_DIR); git reset --hard; git clean -fxd :/;
+
+xtools:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 223):
+	cd $(XENOMAI_DIR); ./scripts/bootstrap
+	# --with-core=cobalt --enable-debug=partial
+	mkdir -p $(XBUILD_DIR)
+	cd $(XBUILD_DIR); $(XENOMAI_DIR)/configure CFLAGS="-march=armv6zk -mfpu=vfp" LDFLAGS="-mtune=arm1176jzf-s" \
+											   --build=i686-pc-linux-gnu --host=arm-linux-gnueabihf \
+											   --with-core=cobalt \
+											   CC=${CROSS_COMPILE}gcc LD=${CROSS_COMPILE}ld
+											   # --enable-smp (Symmetric multiprocessing)
+	make -C $(XBUILD_DIR) $(CORES)
+
+clean_kernel:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 240):
+	rm -rf $(KPACKAGE_DIR)
+	rm -rf $(KERNEL_DIR)
+	rm -rf $(KBUILD_DIR)
+
+menuconfig:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 111):
+	make -C $(LINUX_DIR) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) O=$(KBUILD_DIR) $(CORES) menuconfig
+
+kernel_package:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 66):
+	mkdir -p $(KPACKAGE_DIR)
+	cd $(KERNEL_DIR); tar czf $(KPACKAGE_DIR)/xenomai-kernel.tgz *
+
+# files hash-table stats:
+# Load=22/1024=2%, Rehash=0, Collisions=0/66=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 42 / storage = 477 B / avg = 11 B
+# current buf: size = 8162 B / used = 477 B / count = 42 / avg = 11 B
+
+# strcache performance: lookups = 82 / hit rate = 48%
+# hash-table stats:
+ 
+# Load=42/8192=1%, Rehash=0, Collisions=1/82=1%
+# Finished Make data base on Fri Jul  8 10:48:23 2022
+
+ 
