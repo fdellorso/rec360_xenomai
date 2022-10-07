@@ -19,6 +19,8 @@
 
 - Version <b>8.3.0</b>, Target OS <b>Buster</b>, Target Platform <b>Pi 1/Zero</b> 
 
+- SD card with DietPi fresh installed -> Will be patched with Xenomai, connect to PC before executing the next commands
+
 ## Command to compile
 
 - `$ make patch_irq`
