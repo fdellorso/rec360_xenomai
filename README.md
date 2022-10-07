@@ -19,7 +19,13 @@
 
 - Version <b>8.3.0</b>, Target OS <b>Buster</b>, Target Platform <b>Pi 1/Zero</b> 
 
-- SD card with DietPi fresh installed -> Will be patched with Xenomai, connect to PC before executing the next commands
+<h5>Fresh Install:</h5>
+
+- SD card with a DietPi fresh install -> Will be patched with Xenomai, connect to PC before executing the next commands
+
+<h5>Updating rec_360 Xenomai kernel:</h5>
+
+- Connect SD card where rec_360 system is installed, and apply patch with the same commands(?)
 
 ## Command to compile
 
