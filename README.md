@@ -21,7 +21,7 @@
 
 <h5>Fresh Install:</h5>
 
-- SD card with a DietPi fresh install -> Will be patched with Xenomai, connect to PC before executing the next commands
+- SD card with a DietPi after First_boot and Second_boot procedures -> Will be patched with Xenomai, connect to PC before executing the next commands
 
 <h5>Updating rec_360 Xenomai kernel:</h5>
 
